@@ -1,0 +1,25 @@
+{
+  "name": "tfg",
+  "version": "1.0.0",
+  "description": "Aplicacion de la inteligencia artificial en el analisis de emociones para detectar indicios de depresion",
+  "main": "server.js",
+  "scripts": {
+    "test": "",
+    "start": "node server.js"
+  },
+  "author": "Jordi Sánchez",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.1",
+    "form-data": "^4.0.0",
+    "fs": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.5.0",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^2.7.0",
+    "nodemon": "^3.1.0"
+  }
+}
