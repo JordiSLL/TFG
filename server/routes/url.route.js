@@ -1,0 +1,19 @@
+const express = require('express');
+const router = express.Router();
+const path = require('path');
+const auth = require('../middleware/auth.middleware');
+
+clientPath = path.join(__dirname, '..', '..', 'client');
+
+router.use(express.static(clientPath));
+
+//app.get('/', requireAuth, (req, res) => res.render('loginRegister.html'));
+
+router.get('/', (req, res) => {
+    res.sendFile(path.join(clientPath, 'loginRegister.html'));
+  });
+
+router.get('/main', auth.authenticate, auth.authenticateUser, (req, res) => {
+    res.sendFile(path.join(clientPath, 'main.html'));
+});
+module.exports = router;

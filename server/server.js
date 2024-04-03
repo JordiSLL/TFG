@@ -4,6 +4,7 @@ const app = express()
 const cors = require('cors')
 //const fs = require('fs');
 
+
 const config = require('./config/config');
 const UserRouter = require("./routes/user.route");
 const UrlRouter = require('./routes/url.route');
@@ -14,11 +15,16 @@ const port = config.PORT;
 //app.use(cors());
 //const upload = multer({ dest: 'uploads/' });
 
-app.use('/api/users', UserRouter);
+//app.use('/api/users', UserRouter);
 
 //app.use('/api/pacient', PacientRouter);
 
-//app.use('/api/urls', UrlRouter);
+app.use('/', UrlRouter);
+
+//Si se añade alguna URL no valida vamos directamente al loginRegister
+app.use((req, res) => {
+    res.redirect('/');
+  });
 
 app.listen(port, () => {
     console.log("Listening on port "+port)
