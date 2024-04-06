@@ -5,7 +5,7 @@ var mongo = require('mongodb');
 class MongoDBUser{
   constructor(database) {
     this.database = database;
-    this.collection = mongoClient.db('TFG').collection('users');
+    this.collection = mongoClient.db('TFG').collection('Medico');
   }
 
   async create(user, cb) {

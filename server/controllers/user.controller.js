@@ -1,8 +1,10 @@
 const auth = require('../services/auth.service.js');
 const MongoDBUser = require('../models/user.model');
+userModel = new MongoDBUser();
 
 exports.create = (req, res) => {
     const user = req.body;
+    console.log(user)
     // check if any value is missing
     if (!user.name || !user.email || !user.password) {
       return res.status(400).send({
@@ -23,6 +25,7 @@ exports.create = (req, res) => {
       });
     });
   };
+  
   exports.login = (req, res) => {
     const user = req.body;
     // check if any value is missing
