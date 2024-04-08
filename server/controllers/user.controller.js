@@ -1,10 +1,13 @@
 const auth = require('../services/auth.service.js');
 const MongoDBUser = require('../models/user.model');
+const bcrypt = require('bcrypt');
 userModel = new MongoDBUser();
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     const user = req.body;
     console.log(user)
+    const salt = await bcrypt.genSalt();
+    user.password = await bcrypt.hash(user.password, salt);
     // check if any value is missing
     if (!user.name || !user.email || !user.password) {
       return res.status(400).send({
@@ -19,7 +22,10 @@ exports.create = (req, res) => {
         message: "User already exists"
       });
       userModel.create(user).then((err, result) => {
-        res.status(200).send({user, token: auth.signToken(user)});
+        var token = auth.signToken(user);
+        const maxAge = 3 * 24 * 60 * 60;
+        res.cookie('Token', token, { httpOnly: true, maxAge: maxAge * 1000 });
+        res.status(200).send({user, token: token});
       }).catch((err) => {
         console.log("Error en la creacion", err);
       });

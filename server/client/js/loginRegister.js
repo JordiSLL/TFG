@@ -44,7 +44,18 @@ console.log(userData)
       headers: {'Content-Type': 'application/json'}  
     });
     const data = await res.json();
-    console.log(data);
+    console.log("Token: "+data.token)
+    //if data.error
+    if(data.user){
+    sessionStorage.setItem('Token', JSON.stringify(data.token));
+    //console.log(data);
+    if (data.token) {
+          location.assign('/main');
+    } else {
+      location.assign('/');
+    }
+  
+  }
   }
   catch(error){
     console.log(error);

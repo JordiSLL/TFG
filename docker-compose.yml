@@ -1,0 +1,20 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/mongodb:/data/db
+  nodeapp:
+    build: 
+      context: ./server
+      args:
+        NODE_ENV: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/app
+    depends_on:
+      - mongodb
+    command: [ "npm", "run", "start-dev" ]

@@ -1,6 +1,10 @@
 require("dotenv").config({path:__dirname+'/../.env'});
 
 const config = {
+  AUTH_SECRET_KEY: process.env.AUTH_SECRET_KEY || "secret_key",
+  AUTH_KEY_EXPIRATION: process.env.AUTH_KEY_EXPIRATION || "1h",
+  CODE_REGISTRATION: process.env.CODE_REGISTRATION || "",
+  
   PORT: process.env.PORT || "",
   MONGO_HOST: process.env.MONGO_HOST || "",
   MONGO_PORT: process.env.MONGO_PORT || "",

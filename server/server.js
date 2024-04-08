@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 //const multer = require('multer');
 const cors = require('cors')
 //const fs = require('fs');
@@ -16,11 +17,12 @@ const port = config.PORT;
 //app.use(cors());
 //const upload = multer({ dest: 'uploads/' });
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use('/api/users', UserRouter);
 app.use('/api/users', (req, res, next) => {
   const origin = req.get('origin');
-  if (origin === 'http://localhost:3000') { // Cambia esto según la URL de tu aplicación
+  if (origin === 'http://localhost:3000') { 
     next();
   } else {
     res.redirect('/');;
