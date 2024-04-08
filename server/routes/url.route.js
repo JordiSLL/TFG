@@ -3,7 +3,7 @@ const router = express.Router();
 const path = require('path');
 const auth = require('../middleware/auth.middleware');
 
-clientPath = path.join(__dirname, '..', 'client');
+clientPath = path.join(__dirname, '..','client');
 
 router.use(express.static(clientPath));
 
