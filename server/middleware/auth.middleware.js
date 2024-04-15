@@ -2,7 +2,8 @@ const auth = require('../services/auth.service');
 
 const authenticate = (req, res, next) => {
     const token = req.cookies.Token;
-    if (!token) return res.status(401).send('Access denied. No token provided.');
+    //if (!token) return res.status(401).send('Access denied. No token provided.');
+    if (!token) return res.redirect('/');
     try {
       const decoded = auth.verifyToken(token);
       req.user = decoded;

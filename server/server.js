@@ -20,12 +20,13 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use('/api/users', UserRouter);
+
 app.use('/api/users', (req, res, next) => {
   const origin = req.get('origin');
   if (origin === 'http://localhost:3000') { 
     next();
   } else {
-    res.redirect('/');;
+    res.redirect('/');
   }
 }, UserRouter);
 //app.use('/api/pacient', PacientRouter);

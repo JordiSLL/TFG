@@ -1,11 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Seleccionar Dispositivos de Cámara y Audio</title>
+    <link rel="stylesheet" href="css/main.css">
 </head>
+
 <body>
-    <h1>MAIN PAGE</h1>
+    <h1>FeelGuard Beta</h1>
+    <h4>Aplicació de la intel·ligència artificial en l’anàlisi d’emocions i detecció d’indicis de depressió.</h4>
+    <h4>Code make by Jordi Sánchez</h4>
+    <section class="container">
+        <section class="header">
+            <button id="documentation">Main</button>
+            <button id="documentation">Documentació</button>
+            <button id="filter">Sessions</button>
+            <div class="profile-dropdown">
+                <button id="profile-btn">Configuració</button>
+                <div class="dropdown-content" id="dropdown-content">
+                    <button id="profile-btn">Perfil</button>
+                    <button id="settings-btn">Configuració</button>
+                    <button id="Preferences-btn">Preferencies</button>
+                    <button id="logout-btn">Tancar Sessió</button>
+                </div>
+            </div>
+        </section>
+        <section class="newUser-group">
+            <label class="input-wrapper" data-text="">
+                <input type="text" placeholder="Nom usuari...">
+            </label>
+            <button id="searchUser">Buscar Usuari</button>
+            <button id="createUser">Crear un nou Usuari</button>
+        </section>
+
+        <video id="video" autoplay playsinline muted></video>
+        <section class="controls">
+            <button id="startButton" style="display:none;">Iniciar Grabación</button>
+            <button id="stopButton" style="display:none;">Finalizar Grabación</button>
+            <button id="finishButton" style="display:none;">Finalizar Completamente</button>
+        </section>
+
+        <div id="configuration" class="popup">
+            <div class="popup-content">
+                <h2>Configuració</h2>
+                <label for="videoSource">Selecciona un Dispositiu de Video:</label>
+                <select id="videoSource"></select><br><br>
+                <label for="audioSource">Selecciona un Dispositiu de Audio:</label>
+                <select id="audioSource"></select><br><br>
+                <button id="conf-save-btn" class="save-btn">Guardar</button>
+                <button id="conf-close-btn" class="close-btn">Tancar</button>
+            </div>
+        </div>
+
+        <div id="newUser" class="popup newUserPopUp">
+            <div class="popup-content crearNewUser">
+                <h2>Donar d'alta un nou Usuari!</h2>
+
+                <div class="input-newUser">
+                    <label for="nomComplet">Nom Complet:</label>
+                    <input type="text" id="nomComplet" placeholder="Nom Complet">
+                </div>
+
+                <div class="input-newUser">
+                    <label for="dataNaixement">Data de Naixement:</label>
+                    <input type="date" id="dataNaixement" placeholder="Data de Naixement">
+                </div>
+
+                <div class="input-newUser">
+                    <label for="targetaSanitaria">Targeta Sanitària:</label>
+                    <input type="text" id="targetaSanitaria" placeholder="Targeta Sanitària">
+                </div>
+                <div class="input-newUser-button">
+                    <button id="newU-save-btn" class="save-btn">Crear</button>
+                    <button id="newU-close-btn" class="close-btn">Tancar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="js/main.js"></script>
+    <script src="js/video.js"></script>
 </body>
+
 </html>
