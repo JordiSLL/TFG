@@ -1,37 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
-    
-</head>
-<body>
-    <div class="container">
-        <form id="loginForm" class="form" style="display: flex;">
-          <h2>Iniciar Sesión</h2>
-          <input class="input" name="email" type="email" placeholder="Correo electrónico" required>
-          <div class="email error"></div>
-          <input class="input" name="password" type="password" placeholder="Contraseña" required>
-          <div class="password error"></div>
-          <p>¿No tienes una cuenta? <a href="#" onclick="toggleForm()">Registrarse</a></p>
-          <button type="submit">Iniciar Sesión</button>
-        </form>
 
-        <form id="registerForm" class="form">
-          <h2>Registrarse</h2>
-          <input class="input" name="name" type="text" placeholder="Nombre" required>
-          <input class="input" name="email" type="email" placeholder="Correo electrónico" required>
-          <div class="email error"></div>
-          <input class="input" name="password" type="password" placeholder="Contraseña" required>
-          <div class="password error"></div>
-          <input class="input" name="code" type="password" placeholder="Codigo de Registro" required>
-          <div class="code error"></div>
-          <button type="submit">Registrarse</button>
-          <p>¿Ya tienes una cuenta? <a href="#" onclick="toggleForm()">Iniciar sesión</a></p>
-        </form>
-      </div>
-      <script src="../js/loginRegister.js"></script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+
+</head>
+
+<body>
+
+  <h3 class="top-h">Aplicació de la intel·ligència artificial en l’anàlisi d’emocions i detecció d’indicis de
+    depressió.</h3>
+  <h3 class="bottom-h">Code make by Jordi Sánchez</h3>
+
+
+  <div class="container">
+    <h1>FeelGuard Beta</h1>
+    <form id="loginForm" class="form" style="display: flex;">
+      <h2>Iniciar Sesión</h2>
+      <input class="input" name="email" type="email" placeholder="Correo electrónico" required>
+      <input class="input" name="password" type="password" placeholder="Contraseña" required>
+      <div id="loginError"class="error"></div>
+      <p>¿No tienes una cuenta? <a href="#" onclick="toggleForm()">Registrarse</a></p>
+      <button type="submit">Iniciar Sesión</button>
+    </form>
+
+    <form id="registerForm" class="form">
+      <h2>Registrarse</h2>
+      <input class="input" name="name" type="text" placeholder="Nombre" required>
+      <input class="input" name="email" type="email" placeholder="Correo electrónico" required>
+      <input class="input" name="password" type="password" placeholder="Contraseña" required>
+      <input class="input" name="code" type="password" placeholder="Codigo de Registro" required>
+      <div id="registerError"class="register error"></div>
+      <button type="submit">Registrarse</button>
+      <p>¿Ya tienes una cuenta? <a href="#" onclick="toggleForm()">Iniciar sesión</a></p>
+    </form>
+  </div>
+  <script src="../js/loginRegister.js"></script>
 </body>
+
 </html>

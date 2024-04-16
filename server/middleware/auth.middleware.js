@@ -9,7 +9,8 @@ const authenticate = (req, res, next) => {
       req.user = decoded;
       next();
     } catch (ex) {
-      res.status(400).send('Invalid token.');
+      //res.status(400).send('Invalid token.');
+      res.redirect('/');
     }
 };
 

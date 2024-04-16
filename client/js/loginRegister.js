@@ -1,9 +1,8 @@
 //Codigo Para las opciones de registrar y iniciar sesion
 const loginForm = document.getElementById("loginForm");
 const registerForm = document.getElementById("registerForm");
-const emailError = document.querySelector('.email.error');
-const passwordError = document.querySelector('.password.error');
-const codeError = document.querySelector('.code.error');
+const registerError = document.getElementById("registerError");
+const loginError = document.getElementById("loginError");
 
 registerForm.style.display = "none";
 
@@ -13,9 +12,11 @@ function toggleForm() {
   if (loginForm.style.display === "none") {
     loginForm.style.display = "flex";
     registerForm.style.display = "none";
+    registerError.textContent="";
   } else {
     loginForm.style.display = "none";
     registerForm.style.display = "flex";
+    registerError.textContent="";
   }
 }
 
@@ -23,44 +24,87 @@ registerForm.addEventListener('submit', async (event)=> {
   // Evitamos que el formulario se envíe automáticamente
   event.preventDefault();
 
-  //Reseteamos los errores
-  emailError.textContent = '';
-  passwordError.textContent = '';
-  //Obtenemos los valores
+  registerError.textContent="";
+  
   const userData = {
     name: registerForm.name.value,
     email: registerForm.email.value,
-    password: registerForm.password.value
+    password: registerForm.password.value,
+    code: registerForm.code.value
   };
-  const name = registerForm.name.value;
-  const email = registerForm.email.value;
-  const password = registerForm.password.value;
-  const code = registerForm.code.value;
-console.log(userData)
-  try{
+
+  try {
     const res = await fetch('/api/users/register', { 
       method: 'POST', 
       body: JSON.stringify(userData),
       headers: {'Content-Type': 'application/json'}  
     });
-    const data = await res.json();
-    console.log("Token: "+data.token)
-    //if data.error
-    if(data.user){
-    sessionStorage.setItem('Token', JSON.stringify(data.token));
-    //console.log(data);
-    if (data.token) {
-          location.assign('/main');
-    } else {
-      location.assign('/');
-    }
   
+    if (res.ok) {
+      const data = await res.json();
+      if (data.user) {
+        location.assign('/main');
+      } else {
+        location.assign('/');
+      }
+    } else if (res.status === 400) {
+      const errorData = await res.json();
+      const errorMessage = errorData.message;
+      registerForm.reset();
+      registerError.textContent = errorMessage;
+      console.error(`Error 400 - ${errorMessage}`);
+    } else {
+      throw new Error('Error de red o código de estado no esperado');
+    }
+  } catch (error) {
+    console.error('Error al registrar el usuari:', error);
   }
-  }
-  catch(error){
-    console.log(error);
-  }
-
-  console.log("Email: "+ email)
-  console.log("Contraseña: "+password)
 });
+
+loginForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  loginError.textContent = "";
+
+  const userData = {
+    email: loginForm.email.value,
+    password: loginForm.password.value
+  };
+
+  try {
+    const res = await fetch('/api/users/login', { 
+      method: 'POST', 
+      body: JSON.stringify(userData),
+      headers: {'Content-Type': 'application/json'}  
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.user) {
+        location.assign('/main');
+      } else {
+        location.assign('/');
+      }
+    } else if (res.status === 400) {
+      const errorData = await res.json();
+      const errorMessage = errorData.message;
+      registerForm.reset();
+      loginError.textContent = errorMessage;
+      console.error(`Error 400 - ${errorMessage}`);
+    } else if (res.status === 401) {
+      const errorMessage = "Contrasenya invàlida"; 
+      registerForm.reset();
+      loginError.textContent = errorMessage;
+      console.error(`Error 401 - ${errorMessage}`);
+    } else if (res.status === 404) {
+      const errorMessage = "Usuari no trobat"; 
+      registerForm.reset();
+      loginError.textContent = errorMessage;
+      console.error(`Error 404 - ${errorMessage}`);
+    } else {
+      throw new Error('Error de red o código de estado no esperado');
+    }
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+  }
+});
+
