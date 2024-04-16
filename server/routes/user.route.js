@@ -7,6 +7,8 @@ router.post('/register', userController.create);
 
 router.post('/login', userController.login);
 
+router.get('/logout', userController.logout);
+
 // Retrieve all users
 router.get('/', auth.authenticate, auth.authenticateAdmin, userController.findAll);
 
@@ -18,10 +20,5 @@ router.put('/:id', auth.checkAuth, userController.update);
 
 // Delete a user with id
 router.delete('/:id', auth.checkAuth, userController.delete);
-/*
-router.post('/login',(req,res)=>{
-res.send("create user")
-console.log("Login");
-});*/
 
 module.exports = router;

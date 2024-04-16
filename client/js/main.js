@@ -40,7 +40,17 @@ function toggleConfiguration(e) {
 
 function logout(e) {
     e.stopPropagation();
-    // Lógica para cerrar la sesión
+    fetch('/api/users/logout')
+      .then(response => {
+        if (response.ok) {
+          location.assign('/');
+        } else {
+          console.error('Error en el logout:', response.status);
+        }
+      })
+      .catch(error => {
+        console.error('Error al intentar hacer logout:', error);
+      });
 }
 
 function closeConfiguration(e) {

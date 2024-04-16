@@ -121,3 +121,8 @@ exports.delete = (req, res) => {
     }
   });
 };
+
+exports.logout = (req, res) => {
+  res.cookie('Token', '', { httpOnly: true, maxAge: 1 });
+  res.redirect('/');
+};
