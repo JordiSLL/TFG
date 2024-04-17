@@ -109,6 +109,7 @@ button:hover {
 
 .newUser-group button {
     width: 15%;
+    height: 3rem;
 }
 
 /*Pop up Settings*/
@@ -235,4 +236,26 @@ input[type="date"].date-input--has-value::-webkit-datetime-edit-year-field {
 .error{
     color: rgb(223, 67, 67);
   }
-/**/
+/*Buscador de pacients*/
+.searchU{
+    width: 40%;
+}
+.search-results {
+    max-height: 200px; 
+    overflow-y: auto; 
+    border: 1px solid #ccc; 
+    border-top: none; 
+    border-radius: 0 0 5px 5px; 
+}
+
+.search-result {
+    padding: 5px 10px;
+    cursor: pointer;
+    overflow-y: auto;
+    border-top: none;
+    background-color: #fff; 
+}
+
+.search-result:hover {
+    background-color: #bbb;
+}

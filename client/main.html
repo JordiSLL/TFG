@@ -28,10 +28,12 @@
             </div>
         </section>
         <section class="newUser-group">
-            <label class="input-wrapper" data-text="">
-                <input type="text" placeholder="Nom usuari...">
-            </label>
-            <button id="searchUser">Buscar Usuari</button>
+            <div class="searchU">
+                <label class="input-wrapper" data-text="">
+                    <input id="searchInput" type="text" placeholder="Nom usuari...">
+                </label>
+                <div id="searchResults" class="search-results"></div>
+            </div>  
             <button id="createUser">Crear un nou Usuari</button>
         </section>
 
@@ -72,7 +74,7 @@
                     <label for="targetaSanitaria">Targeta Sanitària:</label>
                     <input type="text" name="code" id="targetaSanitaria" placeholder="Targeta Sanitària">
                 </div>
-                <div id="msj"class="msj"></div>
+                <div id="msj" class="msj"></div>
                 <div class="input-newUser-button">
                     <button type="submit" id="newU-save-btn" class="save-btn">Crear</button>
                     <button id="newU-close-btn" class="close-btn">Tancar</button>
