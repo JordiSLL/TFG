@@ -12,10 +12,13 @@ const configuration = document.getElementById("configuration");
 const confCloseBtn = document.getElementById("conf-close-btn");
 const saveBtn = document.getElementById("conf-save-btn");
 
-const createNewUser = document.getElementById("createUser");
+const newUsaveBtn = document.getElementById("createUser");
 const newUser = document.getElementById("newUser");
-const newUsaveBtn = document.getElementById("newU-save-btn");
 const newUcloseBtn = document.getElementById("newU-close-btn");
+const newPacientForm = document.getElementById("createUserForm");
+const createNewUser = document.getElementById("newU-save-btn");
+
+const searchUser = document.getElementById("searchUser");
 
 profileBtn.addEventListener("click", toggleDropdown);
 settingsBtn.addEventListener("click", toggleConfiguration);
@@ -23,7 +26,8 @@ logoutBtn.addEventListener("click", logout);
 confCloseBtn.addEventListener("click", closeConfiguration);
 newUcloseBtn.addEventListener("click", closeNewUser);
 saveBtn.addEventListener("click", saveConfiguration);
-createNewUser.addEventListener("click", toggleNewUser);
+newUsaveBtn.addEventListener("click", openNewUser);
+searchUser.addEventListener("click", searchInfoUser);
 
 function toggleDropdown(e) {
     e.stopPropagation();
@@ -60,6 +64,7 @@ function closeConfiguration(e) {
 
 function closeNewUser(e) {
     e.stopPropagation();
+    e.preventDefault();
     newUser.classList.remove("active");
 }
 
@@ -69,13 +74,61 @@ function saveConfiguration(e) {
     configuration.classList.remove("active");
 }
 
-function toggleNewUser(e) {
+function openNewUser(e) {
     e.stopPropagation();
+    newPacientForm.reset();
     newUser.classList.toggle("active");
 }
+function searchInfoUser(e) {
+    e.stopPropagation();
+    console.log("bUSCAR");
+    fetch('/api/pacient/')
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+    });
+}
 
+createNewUser.addEventListener('click', async (event)=> {
+    event.preventDefault();
+    const msjNewUserForm = document.getElementById("msj");
+    msjNewUserForm.textContent ="";
+    const PacientData = {
+        name: newPacientForm.name.value,
+        date: newPacientForm.date.value,
+        code: newPacientForm.code.value
+      };
 
-// Tanquem el Les pop ups quan clickem fora
+console.log(PacientData);
+
+try {
+    const res = await fetch('/api/pacient/create', { 
+      method: 'POST', 
+      body: JSON.stringify(PacientData),
+      headers: {'Content-Type': 'application/json'}  
+    });
+    console.log("HERE");
+    if (res.ok) {
+        newUser.classList.remove("active");
+        msjNewUserForm.classList.remove("error");
+    } else if (res.status === 400) {
+      const msj = await res.json();
+      msjNewUserForm.textContent = msj.message;
+      msjNewUserForm.classList.add("error");
+    } else {
+      throw new Error('Error de red o código de estado no esperado');
+    }
+  } catch (error) {
+    console.error('Error al registrar el usuari:', error);
+  }
+});
+
+// Tanquem les pop ups quan clickem fora
 document.addEventListener("click", function (e) {
     if (!e.target.closest(".profile-dropdown")) {
         dropdownContent.classList.remove("active");

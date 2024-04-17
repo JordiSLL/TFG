@@ -7,8 +7,6 @@ clientPath = path.join(__dirname, '..','client');
 
 router.use(express.static(clientPath));
 
-//app.get('/', requireAuth, (req, res) => res.render('loginRegister.html'));
-
 router.get('/', (req, res) => {
     res.sendFile(path.join(clientPath, 'loginRegister.html'));
   });

@@ -232,4 +232,7 @@ input[type="date"].date-input--has-value::-webkit-datetime-edit-day-field,
 input[type="date"].date-input--has-value::-webkit-datetime-edit-year-field {
     color: #333;
 }
+.error{
+    color: rgb(223, 67, 67);
+  }
 /**/

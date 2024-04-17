@@ -55,28 +55,29 @@
         </div>
 
         <div id="newUser" class="popup newUserPopUp">
-            <div class="popup-content crearNewUser">
+            <form id="createUserForm" class="popup-content crearNewUser">
                 <h2>Donar d'alta un nou Usuari!</h2>
 
                 <div class="input-newUser">
                     <label for="nomComplet">Nom Complet:</label>
-                    <input type="text" id="nomComplet" placeholder="Nom Complet">
+                    <input type="text" name="name" id="nomComplet" placeholder="Nom Complet">
                 </div>
 
                 <div class="input-newUser">
                     <label for="dataNaixement">Data de Naixement:</label>
-                    <input type="date" id="dataNaixement" placeholder="Data de Naixement">
+                    <input type="date" name="date" id="dataNaixement" placeholder="Data de Naixement">
                 </div>
 
                 <div class="input-newUser">
                     <label for="targetaSanitaria">Targeta Sanitària:</label>
-                    <input type="text" id="targetaSanitaria" placeholder="Targeta Sanitària">
+                    <input type="text" name="code" id="targetaSanitaria" placeholder="Targeta Sanitària">
                 </div>
+                <div id="msj"class="msj"></div>
                 <div class="input-newUser-button">
-                    <button id="newU-save-btn" class="save-btn">Crear</button>
+                    <button type="submit" id="newU-save-btn" class="save-btn">Crear</button>
                     <button id="newU-close-btn" class="close-btn">Tancar</button>
                 </div>
-            </div>
+            </form>
         </div>
     </section>
     <script src="js/main.js"></script>

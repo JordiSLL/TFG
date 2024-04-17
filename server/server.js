@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors')
 //const fs = require('fs');
 
-
 const config = require('./config/config');
 const UserRouter = require("./routes/user.route");
 const UrlRouter = require('./routes/url.route');
@@ -29,11 +28,11 @@ app.use('/api/users', (req, res, next) => {
     res.redirect('/');
   }
 }, UserRouter);
-//app.use('/api/pacient', PacientRouter);
+
+app.use('/api/pacient', PacientRouter);
 
 app.use('/', UrlRouter);
 
-//Si se añade alguna URL no valida vamos directamente al loginRegister
 app.use((req, res) => {
     res.redirect('/');
   });

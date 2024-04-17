@@ -31,7 +31,7 @@ class MongoDBUser{
       cb(err);
     });
   }
-
+  
   async getByEmail(email,cb) {
     const result = await this.collection.findOne({ email: email });
     return result;
