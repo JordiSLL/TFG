@@ -41,7 +41,7 @@ h4 {
 }
 
 button {
-
+    font-size: medium;
     color: #333;
     padding: 10px;
     border: none;
@@ -246,6 +246,8 @@ input[type="date"].date-input--has-value::-webkit-datetime-edit-year-field {
     border: 1px solid #ccc; 
     border-top: none; 
     border-radius: 0 0 5px 5px; 
+    position: fixed;
+    width: 28%;
 }
 
 .search-result {
@@ -259,3 +261,35 @@ input[type="date"].date-input--has-value::-webkit-datetime-edit-year-field {
 .search-result:hover {
     background-color: #bbb;
 }
+
+/*BATCH UPLOAD*/
+.batchUpload{
+    display: flex;
+    margin-top: 15px;
+    gap: 20px;
+}
+
+.selected{
+    border: 2px solid rgba(0, 255, 0, 0.5);
+}
+
+.file-upload {
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    padding: 20px;
+    cursor: pointer;
+    width: 22rem;
+    height: 11rem;
+  }
+  .file-upload:hover {
+    border-color: #6752a6;
+  }
+  
+  .file-upload:hover span {
+    color: #6752a6;
+  } 

@@ -1,68 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-    enumerateDevices();
-});
-const data = [{
-    "_id": "661fde3fb9094d628bb7c14b",
-    "name": "Nero02",
-    "date": "2024-04-18",
-    "code": "CB696688695FR"
-},
-{
-    "_id": "661fdf95cd2ea3cda8b6af3d",
-    "name": "Jordi",
-    "date": "0001-01-01",
-    "code": "CB696688695FR"
-},
-{
-    "_id": "661fe70ee3b0ad286dd8e0d8",
-    "name": "Jordi",
-    "date": "2024-04-12",
-    "code": "CB696688695FR"
-},
-{
-    "_id": "661fe714e3b0ad286dd8e0d9",
-    "name": "Nero02",
-    "date": "2024-04-07",
-    "code": "990618"
-},
-{
-    "_id": "661fe71ce3b0ad286dd8e0da",
-    "name": "NeroBot",
-    "date": "2024-04-04",
-    "code": "VYNTWBD"
-},
-{
-    "_id": "661fe747e3b0ad286dd8e0db",
-    "name": "Josep Sanchez Aldeguer",
-    "date": "2024-04-19",
-    "code": "1234"
-},
-{
-    "_id": "661fe757e3b0ad286dd8e0dc",
-    "name": "Jordi Sanchez Lloansi",
-    "date": "2024-04-20",
-    "code": "123456789"
-}];
-const videoSelect = document.getElementById("videoSource");
-const audioSelect = document.getElementById("audioSource");
-
-const profileBtn = document.getElementById("profile-btn");
-const dropdownContent = document.getElementById("dropdown-content");
-const settingsBtn = document.getElementById("settings-btn");
-const logoutBtn = document.getElementById("logout-btn");
-const configuration = document.getElementById("configuration");
-const confCloseBtn = document.getElementById("conf-close-btn");
-const saveBtn = document.getElementById("conf-save-btn");
-
-const newUsaveBtn = document.getElementById("createUser");
-const newUser = document.getElementById("newUser");
-const newUcloseBtn = document.getElementById("newU-close-btn");
-const newPacientForm = document.getElementById("createUserForm");
-const createNewUser = document.getElementById("newU-save-btn");
-
-const searchInput = document.getElementById('searchInput');
-const searchResults = document.getElementById('searchResults');
-
 profileBtn.addEventListener("click", toggleDropdown);
 settingsBtn.addEventListener("click", toggleConfiguration);
 logoutBtn.addEventListener("click", logout);
@@ -140,6 +75,7 @@ createNewUser.addEventListener('click', async (event) => {
     event.preventDefault();
     const msjNewUserForm = document.getElementById("msj");
     msjNewUserForm.textContent = "";
+
     const PacientData = {
         name: newPacientForm.name.value,
         date: newPacientForm.date.value,
@@ -158,6 +94,7 @@ createNewUser.addEventListener('click', async (event) => {
         if (res.ok) {
             newUser.classList.remove("active");
             msjNewUserForm.classList.remove("error");
+            getAllPacients();
         } else if (res.status === 400) {
             const msj = await res.json();
             msjNewUserForm.textContent = msj.message;
@@ -257,6 +194,7 @@ function showResults(results) {
 function selectUser(userId, userName) {
     sessionStorage.setItem('selectedUserId', userId);
     searchInput.value = userName;
+    verificarSelectedUserId();
     searchResults.innerHTML = '';
 }
 
@@ -270,5 +208,14 @@ searchInput.addEventListener('focus', () => {
     showResults(data);
 });
 
-
+function verificarSelectedUserId() {
+    const selectedUserId = sessionStorage.getItem('selectedUserId');
+    if (selectedUserId) {
+        console.log('El valor de selectedUserId es:', selectedUserId);
+        batchBtn.style.display = 'block';
+        uploadBtn.style.display = 'block';
+    } else {
+        console.log('No hay ningún valor almacenado en selectedUserId');
+    }
+}
 

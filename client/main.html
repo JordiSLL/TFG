@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seleccionar Dispositivos de Cámara y Audio</title>
+    <title>FeelGuard Beta</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
 
@@ -27,21 +27,40 @@
                 </div>
             </div>
         </section>
+
         <section class="newUser-group">
             <div class="searchU">
                 <label class="input-wrapper" data-text="">
                     <input id="searchInput" type="text" placeholder="Nom usuari...">
                 </label>
                 <div id="searchResults" class="search-results"></div>
-            </div>  
+            </div>
             <button id="createUser">Crear un nou Usuari</button>
         </section>
 
-        <video id="video" autoplay playsinline muted></video>
-        <section class="controls">
-            <button id="startButton" style="display:none;">Iniciar Grabación</button>
-            <button id="stopButton" style="display:none;">Finalizar Grabación</button>
-            <button id="finishButton" style="display:none;">Finalizar Completamente</button>
+        <div class="batchUpload">
+            <button id="batch-btn" class="batch-btn" style="display:none;">Gravar Sessió</button>
+            <button id="upload-btn" class="upload-btn" style="display:none;">Pujar un Vídeo</button>
+        </div>
+
+        <section class="uploadVideo" id="uploadVideo"style="display:none;">
+            <label for="videoUpload" class="file-upload">
+                <img src="" alt="Subir archivo" class="iconUpload">
+                <span id="estadoImagen">Sin video seleccionado</span>
+            </label>
+            <input type="file" id="videoUpload" accept="video/*" multiple style="display: none">
+            <button id="cancel-upload-btn">Cancelar</button>
+            <button id="upload-btn">Pujar Videos</button>
+            <button id="finish-upload-btn">Finalitzar</button>
+        </section>
+
+        <section class="controls"style="display:none;">
+            <video id="video" autoplay playsinline muted></video>
+            <div>
+                <button id="startButton" >Iniciar Grabación</button>
+                <button id="stopButton" >Finalizar Grabación</button>
+                <button id="finishButton">Finalizar Completamente</button>
+            </div>
         </section>
 
         <div id="configuration" class="popup">
@@ -81,7 +100,9 @@
                 </div>
             </form>
         </div>
+
     </section>
+    <script src="js/init.js"></script>
     <script src="js/main.js"></script>
     <script src="js/video.js"></script>
 </body>
