@@ -15,25 +15,34 @@ let recordedChunks = [];
 let audioStream;
 let videoStream;
 
-batchBtn.addEventListener("click", function() {
+batchBtn.addEventListener("click", function () {
     batchUpload('batch');
 });
-uploadBtn.addEventListener("click", function() {
+uploadBtn.addEventListener("click", function () {
     batchUpload('upload');
 });
 
 function batchUpload(btnClicked) {
     if (btnClicked === 'batch') {
-        uploadBtn.classList.remove("selected");
-        uploadVideoDiv.style.display = "none";
-        videoBatchDiv.style.display = "block";
-        batchBtn.classList.add("selected"); 
-
+        if (batchBtn.classList.contains("selected")) {
+            videoBatchDiv.style.display = "none";
+            batchBtn.classList.remove("selected");
+        } else {
+            uploadBtn.classList.remove("selected");
+            uploadVideoDiv.style.display = "none";
+            videoBatchDiv.style.display = "block";
+            batchBtn.classList.add("selected");
+        }
     } else if (btnClicked === 'upload') {
-        batchBtn.classList.remove("selected");
-        videoBatchDiv.style.display = "none";
-        uploadVideoDiv.style.display = "block";
-        uploadBtn.classList.add("selected");
+        if (uploadBtn.classList.contains("selected")) {
+            uploadVideoDiv.style.display = "none";
+            uploadBtn.classList.remove("selected");
+        } else {
+            batchBtn.classList.remove("selected");
+            videoBatchDiv.style.display = "none";
+            uploadVideoDiv.style.display = "block";
+            uploadBtn.classList.add("selected");
+        }
     }
 }
 
