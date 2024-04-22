@@ -8,26 +8,33 @@ const batchBtn = document.getElementById('batch-btn');
 const uploadBtn = document.getElementById('upload-btn');
 const uploadVideoDiv = document.getElementById('uploadVideo');
 
+const videoBatchDiv = document.getElementById('videoBatch');
+
 let mediaRecorder;
 let recordedChunks = [];
 let audioStream;
 let videoStream;
 
-batchBtn.addEventListener("click", batchVideo);
-uploadBtn.addEventListener("click", uploadVideo);
+batchBtn.addEventListener("click", function() {
+    batchUpload('batch');
+});
+uploadBtn.addEventListener("click", function() {
+    batchUpload('upload');
+});
 
-function batchVideo(e) {
-    e.stopPropagation();
-    uploadBtn.classList.remove("selected");
-    batchBtn.classList.add("selected"); 
-    uploadVideoDiv.style.display = "none";
-}
+function batchUpload(btnClicked) {
+    if (btnClicked === 'batch') {
+        uploadBtn.classList.remove("selected");
+        uploadVideoDiv.style.display = "none";
+        videoBatchDiv.style.display = "block";
+        batchBtn.classList.add("selected"); 
 
-function uploadVideo(e) {
-    e.stopPropagation();
-    batchBtn.classList.remove("selected");
-    uploadVideoDiv.style.display = "block";
-    uploadBtn.classList.add("selected"); 
+    } else if (btnClicked === 'upload') {
+        batchBtn.classList.remove("selected");
+        videoBatchDiv.style.display = "none";
+        uploadVideoDiv.style.display = "block";
+        uploadBtn.classList.add("selected");
+    }
 }
 
 startButton.addEventListener('click', async () => {

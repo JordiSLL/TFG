@@ -293,3 +293,8 @@ input[type="date"].date-input--has-value::-webkit-datetime-edit-year-field {
   .file-upload:hover span {
     color: #6752a6;
   } 
+
+  #video{
+    margin: 15px;
+    /*transform: scaleX(-1);*/
+  }
