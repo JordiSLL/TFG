@@ -8,6 +8,7 @@ const logoutBtn = document.getElementById("logout-btn");
 const configuration = document.getElementById("configuration");
 const confCloseBtn = document.getElementById("conf-close-btn");
 const saveBtn = document.getElementById("conf-save-btn");
+const msjNewUserForm = document.getElementById("msj");
 
 const newUsaveBtn = document.getElementById("createUser");
 const newUser = document.getElementById("newUser");

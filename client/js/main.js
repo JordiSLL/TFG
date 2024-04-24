@@ -54,6 +54,7 @@ function saveConfiguration(e) {
 function openNewUser(e) {
     e.stopPropagation();
     newPacientForm.reset();
+    msjNewUserForm.textContent = "";
     newUser.classList.toggle("active");
 }
 function searchInfoUser(e) {
@@ -73,7 +74,6 @@ function searchInfoUser(e) {
 
 createNewUser.addEventListener('click', async (event) => {
     event.preventDefault();
-    const msjNewUserForm = document.getElementById("msj");
     msjNewUserForm.textContent = "";
 
     const PacientData = {
@@ -90,7 +90,6 @@ createNewUser.addEventListener('click', async (event) => {
             body: JSON.stringify(PacientData),
             headers: { 'Content-Type': 'application/json' }
         });
-        console.log("HERE");
         if (res.ok) {
             newUser.classList.remove("active");
             msjNewUserForm.classList.remove("error");

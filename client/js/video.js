@@ -27,23 +27,36 @@ function batchUpload(btnClicked) {
         if (batchBtn.classList.contains("selected")) {
             videoBatchDiv.style.display = "none";
             batchBtn.classList.remove("selected");
+            profileBtn.disabled = false;
         } else {
             uploadBtn.classList.remove("selected");
             uploadVideoDiv.style.display = "none";
             videoBatchDiv.style.display = "block";
             batchBtn.classList.add("selected");
+            profileBtn.disabled = true;
         }
     } else if (btnClicked === 'upload') {
         if (uploadBtn.classList.contains("selected")) {
             uploadVideoDiv.style.display = "none";
             uploadBtn.classList.remove("selected");
+            console.log("Disabled true");
+            profileBtn.disabled = false;
         } else {
             batchBtn.classList.remove("selected");
             videoBatchDiv.style.display = "none";
             uploadVideoDiv.style.display = "block";
             uploadBtn.classList.add("selected");
+            console.log("Disabled false");
+            profileBtn.disabled = true;
         }
     }
+}
+
+function disableButtons(){
+
+}
+function enableButtons(){
+    
 }
 
 startButton.addEventListener('click', async () => {
