@@ -7,12 +7,14 @@ class MongoDBUser {
         this.collection = mongoClient.db('TFG').collection('Pacient');
     }
 
-    async create(user, cb) {
-        this.collection.insertOne(user, (err, result) => {
-            if (err) return cb(err);
-            cb(null, result.insertedId.toString());
-        });
-    }
+    async create(user) {
+        try {
+          const result = await this.collection.insertOne(user);
+          return result.insertedId.toString();
+        } catch (error) {
+          throw error;
+        }
+      }
 
     async findAllWithSpecificValue(fieldName, specificValue, cb) {
         try {
