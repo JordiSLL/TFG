@@ -11,7 +11,7 @@ class MongoDBUser {
         try {
           const result = await this.collection.insertOne(user);
           return result.insertedId.toString();
-        } catch (error) {
+        } catch (error) { 
           throw error;
         }
       }

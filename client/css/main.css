@@ -8,7 +8,7 @@ body {
 
 h1,
 h4 {
-    color: #333;
+    color: #122c9e;
     margin: 2rem;
 }
 
@@ -314,4 +314,32 @@ input[type="date"].date-input--has-value::-webkit-datetime-edit-year-field {
   #video{
     margin: 15px;
     /*transform: scaleX(-1);*/
+  }
+
+  .videoButtons > button{
+    color:white;
+  }
+  
+  .startButton{
+    background-color:#61A146;
+  }
+  .startButton:hover{
+    background-color:#39602b;
+  }
+  .stopButton{
+    background-color:#d7d014;
+  }
+  .stopButton:hover{
+    background-color:#C39F0B;
+  }
+  .finishButton{
+    background-color:#ED2315;
+  }
+  .finishButton:hover{
+    background-color:#C8190D;
+  }
+  .videoButtons > button[disabled] {
+  cursor: not-allowed;
+  background-color: #6D6D6D; /* Color de fondo gris */
+  
   }

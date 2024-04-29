@@ -65,6 +65,8 @@ function enableButtons(){
 
 startButton.addEventListener('click', async () => {
     try {
+        batchBtn.disabled= true;
+        uploadBtn.disabled= true;
         const videoConstraints = {
             deviceId: videoSelect.value ? { exact: videoSelect.value } : undefined
         };
@@ -85,9 +87,9 @@ startButton.addEventListener('click', async () => {
         mediaRecorder.ondataavailable = handleDataAvailable;
         mediaRecorder.onstop = handleStop;
         mediaRecorder.start();
-        startButton.style.display = 'none';
-        stopButton.style.display = 'inline';
-        finishButton.style.display = 'inline';
+        startButton.disabled = true;
+        stopButton.disabled = false;
+        finishButton.disabled = false;
     } catch (err) {
         console.error('Error al acceder a los dispositivos:', err);
     }
@@ -103,9 +105,11 @@ stopButton.addEventListener('click', () => {
 finishButton.addEventListener('click', () => {
     videoStream.getTracks().forEach(track => track.stop());
     videoElement.srcObject = null;
-    startButton.style.display = 'inline';
-    stopButton.style.display = 'none';
-    finishButton.style.display = 'none';
+    startButton.disabled = false;
+    stopButton.disabled = true;
+    finishButton.disabled = false;
+    batchBtn.disabled= false;
+    uploadBtn.disabled= false;
 });
 
 // Función para manejar los datos disponibles durante la grabación
@@ -114,7 +118,7 @@ function handleDataAvailable(event) {
         recordedChunks.push(event.data);
     }
 }
-
+/*
 // Función para manejar la finalización de la grabación
 function handleStop() {
     const blob = new Blob(recordedChunks, {
@@ -132,7 +136,42 @@ function handleStop() {
         window.URL.revokeObjectURL(url);
     }, 100);
     recordedChunks = [];
-    startButton.style.display = 'inline';
-    stopButton.style.display = 'none';
-    finishButton.style.display = 'none';
-}
+    startButton.disabled = false;
+    stopButton.disabled = true;
+    finishButton.disabled = true;
+}*/
+
+async function handleStop() {
+    const blob = new Blob(recordedChunks, {
+      type: 'video/mp4'
+    });
+  
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = async function() {
+      const base64data = reader.result;
+      const userId = sessionStorage.getItem('selectedUserId');
+  
+      try {
+        const response = await fetch('/uploadVideo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ base64data, userId})
+        });
+        if (!response.ok) {
+          throw new Error('Error en la subida del vídeo');
+        }
+        const data = await response.json();
+        console.log('Vídeo subido correctamente:', data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+  
+    recordedChunks = [];
+    startButton.disabled = false;
+    stopButton.disabled = true;
+    finishButton.disabled = true;
+  }
