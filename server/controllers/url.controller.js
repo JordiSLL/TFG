@@ -8,4 +8,4 @@ class MongoDBUser {
     }
 
 }
-module.exports = MongoDBUser;
+module.exports = MongoDBUser;   

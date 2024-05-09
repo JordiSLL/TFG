@@ -67,6 +67,8 @@ startButton.addEventListener('click', async () => {
     try {
         batchBtn.disabled= true;
         uploadBtn.disabled= true;
+        console.log("video "+videoSelect.value )
+        console.log("audio "+ audioSelect.value )
         const videoConstraints = {
             deviceId: videoSelect.value ? { exact: videoSelect.value } : undefined
         };
@@ -143,24 +145,34 @@ function handleStop() {
 
 async function handleStop() {
     const blob = new Blob(recordedChunks, {
-      type: 'video/mp4'
+      type: 'video/webm'
     });
-  
+  /*
     const reader = new FileReader();
     reader.readAsDataURL(blob);
     reader.onloadend = async function() {
-      const base64data = reader.result;
+      const base64data = reader.result;*/
       const userId = sessionStorage.getItem('selectedUserId');
   
       try {
+        const formData = new FormData();
+        formData.append('userId', userId);
+        formData.append('video', blob, 'video.webm');
+        
         const response = await fetch('/uploadVideo', {
           method: 'POST',
-          headers: {
+          /*headers: {
             'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ base64data, userId})
+          },*/
+          body: formData
         });
         if (!response.ok) {
+            const blobUrl = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = blobUrl;
+  a.download = 'video.webm';
+  a.click();
+  URL.revokeObjectURL(blobUrl);
           throw new Error('Error en la subida del vídeo');
         }
         const data = await response.json();
@@ -168,8 +180,6 @@ async function handleStop() {
       } catch (error) {
         console.error('Error:', error);
       }
-    };
-  
     recordedChunks = [];
     startButton.disabled = false;
     stopButton.disabled = true;
