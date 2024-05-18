@@ -16,7 +16,7 @@ const renderLoginRegister = (req, res) => {
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      model.createDirectory(req.body.userId, (err, userDir) => {
+      model.createDirectory(path.join(__dirname, '..', 'uploads','tmp',req.body.userId), (err, userDir) => {
         if (err) {
           return cb(err);
         }
@@ -31,7 +31,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single('video');
 
 const uploadVideo = (req, res) => {
-  upload(req, res, (err) => {
+  upload(req, res, async(err) => {
     console.log(req.body.userId)
     console.log(req.file)
     if (err instanceof multer.MulterError) {
@@ -41,15 +41,21 @@ const uploadVideo = (req, res) => {
       console.error('Error al subir el archivo:', err);
       return res.status(500).json({ message: 'Error al subir el archivo' });
     }
-
+    
     const userId = req.body.userId;
-    const currentSession = req.body.currentSession;
+    const currentSession = req.body.SessionDate;
     const currentVideo = model.generateUniqueId();
+    const video = {
+        path: currentVideo
+      };
 
     if (!userId) {
       return res.status(400).json({ message: 'Missing userId' });
     }
+    const updateSuccess = await mongoDBUser.addVideoToSession(userId, currentSession, video);
+
     const videoDir = path.join(__dirname, '..', 'uploads', 'user', userId,"session", currentSession,"videos",currentVideo);
+    
     createDirectory(videoDir);
     const filePath = path.join(videoDir,"video.webm");
     
@@ -86,7 +92,7 @@ const createSession = async(req, res) =>{
         const sessionId = await mongoDBUser.create(session);
         const sessionDir = path.join(__dirname, '..', 'uploads', 'user', session.userId,"session", session.date,"videos");
         createDirectory(sessionDir);
-        res.status(200).send({ message: "Sessio creada correctament", sessionDate: session.date });
+        res.status(200).send({ message: "Sessio creada correctament", sessionDate: session.date, sessionId:sessionId });
       } catch (error) {
         console.log("Error en la creació", error);
         res.status(500).send({ message: "Error al crear la sessió" });

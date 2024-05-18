@@ -1,4 +1,5 @@
 .env
-server/uploads/
+server/uploads/tmp/
+server/uploads/user/
 data/mongodb/
 node_modules/

@@ -97,26 +97,36 @@ startButton.addEventListener('click', async () => {
     }
     //Creem la nova sessió
     try {
-        
+        const tmpcurrentSession = JSON.parse(sessionStorage.getItem('currentSession'));
+        if(!tmpcurrentSession){
         const SessionData = {
             userId: sessionStorage.getItem('selectedUserId'),
-            date: sessionStorage.getItem('currentSession')
+            date: tmpcurrentSession ? tmpcurrentSession.sessionDate : ''
         };
-
+    
         const response = await fetch('/createSession', {
-          method: 'POST',
-          body: JSON.stringify(SessionData),
-          headers: { 'Content-Type': 'application/json' }
+            method: 'POST',
+            body: JSON.stringify(SessionData),
+            headers: { 'Content-Type': 'application/json' }
         });
-
+    
         if (!response.ok) {
-          throw new Error('Error al crear la sessio');
+            throw new Error('Error al crear la sessio');
         }
+    
         const responseData = await response.json();
-        sessionStorage.setItem('currentSession',responseData.sessionDate);
-      } catch (error) {
+    
+        const currentSession = {
+            sessionDate: responseData.sessionDate,
+            sessionId: responseData.sessionId
+        };
+    
+        console.log(currentSession);
+        sessionStorage.setItem('currentSession', JSON.stringify(currentSession));
+    }
+    } catch (error) {
         console.error('Error:', error);
-      }
+    }
 });
 
 // Evento al hacer clic en "Finalizar Grabación"
@@ -154,16 +164,15 @@ async function handleStop() {
       type: 'video/webm'
     });
 
-      const userId = sessionStorage.getItem('selectedUserId');
+    const userId = sessionStorage.getItem('selectedUserId');
+    const currentSession = JSON.parse(sessionStorage.getItem('currentSession'));
+
       try {
         const formData = new FormData();
         formData.append('userId', userId);
-        formData.append('currentSession',sessionStorage.getItem('currentSession'));
+        formData.append('SessionDate',currentSession.sessionDate);
+        formData.append('SessionId',currentSession.sessionId);
         formData.append('video', blob, 'video.webm');
-        
-        for (const entry of formData.entries()) {
-            console.log(entry[0], entry[1]); 
-        }
 
         const response = await fetch('/uploadVideo', {
           method: 'POST',
