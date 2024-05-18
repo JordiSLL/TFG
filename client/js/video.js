@@ -97,9 +97,10 @@ startButton.addEventListener('click', async () => {
     }
     //Creem la nova sessió
     try {
-
+        
         const SessionData = {
-            userId: sessionStorage.getItem('selectedUserId')
+            userId: sessionStorage.getItem('selectedUserId'),
+            date: sessionStorage.getItem('currentSession')
         };
 
         const response = await fetch('/createSession', {
@@ -111,7 +112,8 @@ startButton.addEventListener('click', async () => {
         if (!response.ok) {
           throw new Error('Error al crear la sessio');
         }
-        
+        const responseData = await response.json();
+        sessionStorage.setItem('currentSession',responseData.sessionDate);
       } catch (error) {
         console.error('Error:', error);
       }
@@ -121,6 +123,7 @@ startButton.addEventListener('click', async () => {
 stopButton.addEventListener('click', () => {
     mediaRecorder.stop();
     audioStream.getTracks().forEach(track => track.stop());
+    sessionStorage.removeItem('currentSession');
 });
 
 // Evento al hacer clic en "Finalizar Completamente"
@@ -147,12 +150,16 @@ async function handleStop() {
     });
 
       const userId = sessionStorage.getItem('selectedUserId');
-  
       try {
         const formData = new FormData();
         formData.append('userId', userId);
+        formData.append('currentSession',sessionStorage.getItem('currentSession'));
         formData.append('video', blob, 'video.webm');
         
+        for (const entry of formData.entries()) {
+            console.log(entry[0], entry[1]); 
+        }
+
         const response = await fetch('/uploadVideo', {
           method: 'POST',
           body: formData
@@ -165,6 +172,7 @@ async function handleStop() {
       } catch (error) {
         console.error('Error:', error);
       }
+
     recordedChunks = [];
     startButton.disabled = false;
     stopButton.disabled = true;
