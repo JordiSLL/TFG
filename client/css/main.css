@@ -34,6 +34,7 @@ h4 {
     font-size: medium;
     padding: 15px;
     width: 150px;
+    position: relative;
 }
 
 .content {
@@ -47,7 +48,6 @@ button {
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
-    position: relative;
 }
 
 button:hover {

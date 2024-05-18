@@ -1,4 +1,4 @@
 .env
-./server/uploads
+server/uploads/
 data/mongodb/
 node_modules/

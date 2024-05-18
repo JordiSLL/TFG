@@ -1,4 +1,3 @@
-
 const startButton = document.getElementById('startButton');
 const stopButton = document.getElementById('stopButton');
 const finishButton = document.getElementById('finishButton');
@@ -64,6 +63,7 @@ function enableButtons(){
 }
 
 startButton.addEventListener('click', async () => {
+    //Assignem els dispositius d'audio i video
     try {
         batchBtn.disabled= true;
         uploadBtn.disabled= true;
@@ -95,6 +95,26 @@ startButton.addEventListener('click', async () => {
     } catch (err) {
         console.error('Error al acceder a los dispositivos:', err);
     }
+    //Creem la nova sessió
+    try {
+
+        const SessionData = {
+            userId: sessionStorage.getItem('selectedUserId')
+        };
+
+        const response = await fetch('/createSession', {
+          method: 'POST',
+          body: JSON.stringify(SessionData),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al crear la sessio');
+        }
+        
+      } catch (error) {
+        console.error('Error:', error);
+      }
 });
 
 // Evento al hacer clic en "Finalizar Grabación"
@@ -120,38 +140,12 @@ function handleDataAvailable(event) {
         recordedChunks.push(event.data);
     }
 }
-/*
-// Función para manejar la finalización de la grabación
-function handleStop() {
-    const blob = new Blob(recordedChunks, {
-        type: 'video/mp4'
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = 'video.mp4';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => {
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-    }, 100);
-    recordedChunks = [];
-    startButton.disabled = false;
-    stopButton.disabled = true;
-    finishButton.disabled = true;
-}*/
 
 async function handleStop() {
     const blob = new Blob(recordedChunks, {
       type: 'video/webm'
     });
-  /*
-    const reader = new FileReader();
-    reader.readAsDataURL(blob);
-    reader.onloadend = async function() {
-      const base64data = reader.result;*/
+
       const userId = sessionStorage.getItem('selectedUserId');
   
       try {
@@ -161,18 +155,9 @@ async function handleStop() {
         
         const response = await fetch('/uploadVideo', {
           method: 'POST',
-          /*headers: {
-            'Content-Type': 'application/json'
-          },*/
           body: formData
         });
         if (!response.ok) {
-            const blobUrl = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = blobUrl;
-  a.download = 'video.webm';
-  a.click();
-  URL.revokeObjectURL(blobUrl);
           throw new Error('Error en la subida del vídeo');
         }
         const data = await response.json();
