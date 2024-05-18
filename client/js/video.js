@@ -123,7 +123,7 @@ startButton.addEventListener('click', async () => {
 stopButton.addEventListener('click', () => {
     mediaRecorder.stop();
     audioStream.getTracks().forEach(track => track.stop());
-    sessionStorage.removeItem('currentSession');
+    
 });
 
 // Evento al hacer clic en "Finalizar Completamente"
@@ -135,6 +135,11 @@ finishButton.addEventListener('click', () => {
     finishButton.disabled = false;
     batchBtn.disabled= false;
     uploadBtn.disabled= false;
+    finishButton.disabled = true;
+    videoBatchDiv.style.display = "none";
+    batchBtn.classList.remove("selected");
+    enableButtons();
+    sessionStorage.removeItem('currentSession');
 });
 
 // Función para manejar los datos disponibles durante la grabación
@@ -176,5 +181,5 @@ async function handleStop() {
     recordedChunks = [];
     startButton.disabled = false;
     stopButton.disabled = true;
-    finishButton.disabled = true;
+    finishButton.disabled = false;
   }
