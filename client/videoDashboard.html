@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styleDSVideo.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button id="backButton" class="backButton">Volver</button>
+            <div class="modelButtons">
+                <button id="faceModelButton" class="modelButton">Face Model</button>
+                <button id="speechModelButton" class="modelButton">Speech Model</button>
+                <button id="languageModelButton" class="modelButton">Language Model</button>
+            </div>
+        </div>
+        <div class="grid-container">
+            <div class="info1">
+                <h2>Información General</h2>
+                <div>Sesión ID: <span id="sessionId">0</span></div>
+                <div>Data Sessió: <span id="sessionData">0</span></div>
+                <div>Video ID: <span id="videoId">0</span></div>
+                <div>Duració del Video: <span id="videoDuration">0</span></div>
+                <div>Numero de frases: <span id="phraseNumber">0</span></div>
+            </div>
+            <div class="info2">
+                <h2>Resultats Globals del Video</h2>
+                <div></div>
+                
+            </div>
+            <div class="chart1" colspan="2">
+                <h2>Grafic Face Model</h2>
+                <canvas id="chart"></canvas>
+            </div>
+            <div class="video" colspan="2">
+                <video id="video" controls style="width: 90%;">
+                    <source src="video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="chart2" colspan="2">
+                <h2>Grafic FACS Model</h2>
+                <canvas id="chart2"></canvas>
+            </div>
+            <div class="analyzedText" id="analyzedText">
+            </div>
+        </div>
+    </div>
+    <script src="config-chart.js"></script>
+    <script src="iniPred.js"></script>
+    <script src="test.js"></script>
+</body>
+</html>

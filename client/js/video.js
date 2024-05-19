@@ -51,12 +51,12 @@ function batchUpload(btnClicked) {
     }
 }
 
-function disableButtons(){
+function disableButtons() {
     newUsaveBtn.disabled = true;
     profileBtn.disabled = true;
     searchInput.disabled = true;
 }
-function enableButtons(){
+function enableButtons() {
     newUsaveBtn.disabled = false;
     profileBtn.disabled = false;
     searchInput.disabled = false;
@@ -65,10 +65,10 @@ function enableButtons(){
 startButton.addEventListener('click', async () => {
     //Assignem els dispositius d'audio i video
     try {
-        batchBtn.disabled= true;
-        uploadBtn.disabled= true;
-        console.log("video "+videoSelect.value )
-        console.log("audio "+ audioSelect.value )
+        batchBtn.disabled = true;
+        uploadBtn.disabled = true;
+        console.log("video " + videoSelect.value)
+        console.log("audio " + audioSelect.value)
         const videoConstraints = {
             deviceId: videoSelect.value ? { exact: videoSelect.value } : undefined
         };
@@ -98,32 +98,32 @@ startButton.addEventListener('click', async () => {
     //Creem la nova sessió
     try {
         const tmpcurrentSession = JSON.parse(sessionStorage.getItem('currentSession'));
-        if(!tmpcurrentSession){
-        const SessionData = {
-            userId: sessionStorage.getItem('selectedUserId'),
-            date: tmpcurrentSession ? tmpcurrentSession.sessionDate : ''
-        };
-    
-        const response = await fetch('/createSession', {
-            method: 'POST',
-            body: JSON.stringify(SessionData),
-            headers: { 'Content-Type': 'application/json' }
-        });
-    
-        if (!response.ok) {
-            throw new Error('Error al crear la sessio');
+        if (!tmpcurrentSession) {
+            const SessionData = {
+                userId: sessionStorage.getItem('selectedUserId'),
+                date: tmpcurrentSession ? tmpcurrentSession.sessionDate : ''
+            };
+
+            const response = await fetch('/createSession', {
+                method: 'POST',
+                body: JSON.stringify(SessionData),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al crear la sessio');
+            }
+
+            const responseData = await response.json();
+
+            const currentSession = {
+                sessionDate: responseData.sessionDate,
+                sessionId: responseData.sessionId
+            };
+
+            console.log(currentSession);
+            sessionStorage.setItem('currentSession', JSON.stringify(currentSession));
         }
-    
-        const responseData = await response.json();
-    
-        const currentSession = {
-            sessionDate: responseData.sessionDate,
-            sessionId: responseData.sessionId
-        };
-    
-        console.log(currentSession);
-        sessionStorage.setItem('currentSession', JSON.stringify(currentSession));
-    }
     } catch (error) {
         console.error('Error:', error);
     }
@@ -133,7 +133,7 @@ startButton.addEventListener('click', async () => {
 stopButton.addEventListener('click', () => {
     mediaRecorder.stop();
     audioStream.getTracks().forEach(track => track.stop());
-    
+
 });
 
 // Evento al hacer clic en "Finalizar Completamente"
@@ -143,8 +143,8 @@ finishButton.addEventListener('click', () => {
     startButton.disabled = false;
     stopButton.disabled = true;
     finishButton.disabled = false;
-    batchBtn.disabled= false;
-    uploadBtn.disabled= false;
+    batchBtn.disabled = false;
+    uploadBtn.disabled = false;
     finishButton.disabled = true;
     videoBatchDiv.style.display = "none";
     batchBtn.classList.remove("selected");
@@ -161,34 +161,34 @@ function handleDataAvailable(event) {
 
 async function handleStop() {
     const blob = new Blob(recordedChunks, {
-      type: 'video/webm'
+        type: 'video/webm'
     });
 
     const userId = sessionStorage.getItem('selectedUserId');
     const currentSession = JSON.parse(sessionStorage.getItem('currentSession'));
 
-      try {
+    try {
         const formData = new FormData();
         formData.append('userId', userId);
-        formData.append('SessionDate',currentSession.sessionDate);
-        formData.append('SessionId',currentSession.sessionId);
+        formData.append('SessionDate', currentSession.sessionDate);
+        formData.append('SessionId', currentSession.sessionId);
         formData.append('video', blob, 'video.webm');
 
         const response = await fetch('/uploadVideo', {
-          method: 'POST',
-          body: formData
+            method: 'POST',
+            body: formData
         });
         if (!response.ok) {
-          throw new Error('Error en la subida del vídeo');
+            throw new Error('Error en la subida del vídeo');
         }
         const data = await response.json();
         console.log('Vídeo subido correctamente:', data);
-      } catch (error) {
+    } catch (error) {
         console.error('Error:', error);
-      }
+    }
 
     recordedChunks = [];
     startButton.disabled = false;
     stopButton.disabled = true;
     finishButton.disabled = false;
-  }
+}

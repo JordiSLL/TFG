@@ -7,54 +7,54 @@ const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 
 class MongoDBUser {
 
-    constructor(database) {
-      this.database = database;
-      this.collection = mongoClient.db('TFG').collection('Sessio');
-    }
-
-    async create(user) {
-        try {
-          const result = await this.collection.insertOne(user);
-          return result.insertedId.toString();
-        } catch (error) { 
-          throw error;
-        }
-      }
-
-      async findSessionById(userId, sessionDate) {
-        try {
-          const session = await this.collection.findOne({ userId: userId, date: sessionDate });
-          return session;
-        } catch (error) {
-          throw error;
-        }
-      }
-    
-      async addVideoToSession(userId, sessionDate, video) {
-        try {
-          const result = await this.collection.updateOne(
-            { userId: userId, date: sessionDate },
-            { $push: { videos: video } }
-          );
-          return result.modifiedCount > 0; // Devuelve true si la actualización fue exitosa
-        } catch (error) {
-          throw error;
-        }
-      }
+  constructor(database) {
+    this.database = database;
+    this.collection = mongoClient.db('TFG').collection('Sessio');
   }
 
-  const generateUniqueId = () => {
-    const today = new Date();
-    
-    const year = today.getFullYear().toString().slice(-2);
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const hour = String(today.getHours()).padStart(2, '0');
-    const minute = String(today.getMinutes()).padStart(2, '0');
-    const second = String(today.getSeconds()).padStart(2, '0');
-    
-    return `${year}${month}${day}${hour}${minute}${second}`;
-  };
+  async create(user) {
+    try {
+      const result = await this.collection.insertOne(user);
+      return result.insertedId.toString();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findSessionById(userId, sessionDate) {
+    try {
+      const session = await this.collection.findOne({ userId: userId, date: sessionDate });
+      return session;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async addVideoToSession(userId, sessionDate, video) {
+    try {
+      const result = await this.collection.updateOne(
+        { userId: userId, date: sessionDate },
+        { $push: { videos: video } }
+      );
+      return result.modifiedCount > 0; // Devuelve true si la actualización fue exitosa
+    } catch (error) {
+      throw error;
+    }
+  }
+}
+
+const generateUniqueId = () => {
+  const today = new Date();
+
+  const year = today.getFullYear().toString().slice(-2);
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  const hour = String(today.getHours()).padStart(2, '0');
+  const minute = String(today.getMinutes()).padStart(2, '0');
+  const second = String(today.getSeconds()).padStart(2, '0');
+
+  return `${year}${month}${day}${hour}${minute}${second}`;
+};
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 

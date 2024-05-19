@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/userDashboard.css">
+</head>
+
+<body>
+    <h1>FeelGuard Beta</h1>
+    <h4>Aplicació de la intel·ligència artificial en l’anàlisi d’emocions i detecció d’indicis de depressió.</h4>
+    <h4>Code make by Jordi Sánchez</h4>
+    <section class="container">
+        <section class="header">
+            <button id="main">Main</button>
+            <button id="documentation">Documentació</button>
+            <button id="filter">Sessions</button>
+            <div class="profile-dropdown">
+                <button id="profile-btn">Configuració</button>
+                <div class="dropdown-content" id="dropdown-content">
+                    <button id="settings-btn">Configuració</button>
+                    <button id="Preferences-btn">Preferencies</button>
+                    <button id="logout-btn">Tancar Sessió</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="newUser-group">
+            <div class="searchU">
+                <label class="input-wrapper" data-text="">
+                    <input id="searchInput" type="text" placeholder="Nom usuari...">
+                </label>
+                <div id="searchResults" class="search-results"></div>
+            </div>
+
+        </section>
+
+        <div id="configuration" class="popup">
+            <div class="popup-content">
+                <h2>Configuració</h2>
+                <label for="videoSource">Selecciona un Dispositiu de Video:</label>
+                <select id="videoSource"></select><br><br>
+                <label for="audioSource">Selecciona un Dispositiu de Audio:</label>
+                <select id="audioSource"></select><br><br>
+                <button id="conf-save-btn" class="save-btn">Guardar</button>
+                <button id="conf-close-btn" class="close-btn">Tancar</button>
+            </div>
+        </div>
+
+</body>
+
+</html>
