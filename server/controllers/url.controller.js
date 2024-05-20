@@ -14,6 +14,10 @@ const renderMain = (req, res) => {
     res.sendFile(path.join(clientPath, 'main.html'));
 };
 
+const renderDocumentation = (req, res) => {
+    res.sendFile(path.join(clientPath, 'documentation.html'));
+};
+
 const renderSessionDashboard = (req, res) => {
     res.sendFile(path.join(clientPath, 'sessionDashboard.html'));
 };
@@ -127,5 +131,6 @@ module.exports = {
     createSession,
     renderSessionDashboard,
     renderUserDashboard,
-    renderVideoDashboard
+    renderVideoDashboard,
+    renderDocumentation
 };

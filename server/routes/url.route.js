@@ -10,10 +10,11 @@ router.use(express.static(clientPath));
 // Rutas
 router.get('/', controller.renderLoginRegister);
 router.get('/main', auth.checkAuth, controller.renderMain);
+router.get('/documentation', auth.checkAuth, controller.renderDocumentation);
 router.get('/userDashboard', auth.checkAuth, controller.renderUserDashboard);
-router.get('/sessionDashboard', auth.checkAuth, controller.renderSessionDashboard);
-router.get('/videoDashboard', auth.checkAuth, controller.renderVideoDashboard);
-
+router.get('/sessionDashboard/:sessionId', auth.checkAuth, controller.renderSessionDashboard);
+router.get('/videoDashboard/:sessionId/:videoId', auth.checkAuth, controller.renderVideoDashboard);
+//
 router.post('/uploadVideo', auth.checkAuth, controller.uploadVideo);
 router.post('/createSession', auth.checkAuth, controller.createSession);
 

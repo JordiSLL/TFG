@@ -1,3 +1,18 @@
 #main::after {
-    background-color: red; 
-  }
+  background-color: transparent;
+}
+
+#documentation::after {
+  background-color: transparent;
+}
+
+#filter::after {
+    content: '';    
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #122c9e; 
+}
+

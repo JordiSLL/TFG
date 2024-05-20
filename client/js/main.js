@@ -2,9 +2,38 @@ profileBtn.addEventListener("click", toggleDropdown);
 settingsBtn.addEventListener("click", toggleConfiguration);
 logoutBtn.addEventListener("click", logout);
 confCloseBtn.addEventListener("click", closeConfiguration);
-newUcloseBtn.addEventListener("click", closeNewUser);
-saveBtn.addEventListener("click", saveConfiguration);
-newUsaveBtn.addEventListener("click", openNewUser);
+mainBtn.addEventListener('click', handleNavigation);
+documentationBtn.addEventListener('click', handleNavigation);
+sessionBtn.addEventListener('click', handleNavigation);
+if (newUcloseBtn) newUcloseBtn.addEventListener("click", closeNewUser);
+if (saveBtn) saveBtn.addEventListener("click", saveConfiguration);
+if (newUsaveBtn) newUsaveBtn.addEventListener("click", openNewUser);
+
+function handleNavigation(event) {
+    const targetId = event.target.id;
+    let url;
+    switch (targetId) {
+        case 'main':
+            url = '/main';  
+            break;
+        case 'documentation':
+            url = '/documentation';  
+            break;
+        case 'filter':
+            url = '/userDashboard';  
+            break;
+    }
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al cambiar de página');
+            }
+            location.assign(url);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
 
 function toggleDropdown(e) {
     e.stopPropagation();
@@ -72,39 +101,40 @@ function searchInfoUser(e) {
         });
 }
 
-createNewUser.addEventListener('click', async (event) => {
-    event.preventDefault();
-    msjNewUserForm.textContent = "";
+if (createNewUser)
+    createNewUser.addEventListener('click', async (event) => {
+        event.preventDefault();
+        msjNewUserForm.textContent = "";
 
-    const PacientData = {
-        name: newPacientForm.name.value,
-        date: newPacientForm.date.value,
-        code: newPacientForm.code.value
-    };
+        const PacientData = {
+            name: newPacientForm.name.value,
+            date: newPacientForm.date.value,
+            code: newPacientForm.code.value
+        };
 
-    console.log(PacientData);
+        console.log(PacientData);
 
-    try {
-        const res = await fetch('/api/pacient/create', {
-            method: 'POST',
-            body: JSON.stringify(PacientData),
-            headers: { 'Content-Type': 'application/json' }
-        });
-        if (res.ok) {
-            newUser.classList.remove("active");
-            msjNewUserForm.classList.remove("error");
-            getAllPacients();
-        } else if (res.status === 400) {
-            const msj = await res.json();
-            msjNewUserForm.textContent = msj.message;
-            msjNewUserForm.classList.add("error");
-        } else {
-            throw new Error('Error de red o código de estado no esperado');
+        try {
+            const res = await fetch('/api/pacient/create', {
+                method: 'POST',
+                body: JSON.stringify(PacientData),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (res.ok) {
+                newUser.classList.remove("active");
+                msjNewUserForm.classList.remove("error");
+                getAllPacients();
+            } else if (res.status === 400) {
+                const msj = await res.json();
+                msjNewUserForm.textContent = msj.message;
+                msjNewUserForm.classList.add("error");
+            } else {
+                throw new Error('Error de red o código de estado no esperado');
+            }
+        } catch (error) {
+            console.error('Error al registrar el usuari:', error);
         }
-    } catch (error) {
-        console.error('Error al registrar el usuari:', error);
-    }
-});
+    });
 
 // Tanquem les pop ups quan clickem fora
 document.addEventListener("click", function (e) {
@@ -114,10 +144,10 @@ document.addEventListener("click", function (e) {
     if (!e.target.closest(".popup")) {
         configuration.classList.remove("active");
     }
-    if (!e.target.closest(".popup")) {
+    if (!e.target.closest(".popup") && newUser) {
         newUser.classList.remove("active");
     }
-    if (e.target !== searchInput && e.target !== searchResults) {
+    if (e.target !== searchInput && e.target !== searchResults && searchResults) {
         searchResults.innerHTML = '';
     }
 });
@@ -160,15 +190,16 @@ function saveSettings() {
     localStorage.setItem("selectedAudioDevice", audioSelect.value);
 }
 
-document.querySelector('input[type="date"]').addEventListener('input', function () {
-    if (this.value) {
-        this.classList.add('date-input--has-value');
-    } else {
-        this.classList.remove('date-input--has-value');
-    }
-});
-
-
+const dateInput = document.querySelector('input[type="date"]');
+if (dateInput) {
+    dateInput.addEventListener('input', function () {
+        if (this.value) {
+            this.classList.add('date-input--has-value');
+        } else {
+            this.classList.remove('date-input--has-value');
+        }
+    });
+}
 
 function filterResults(query) {
     return data.filter(item => {
@@ -197,12 +228,14 @@ function selectUser(userId, userName) {
     searchResults.innerHTML = '';
 }
 
+if(searchInput)
 searchInput.addEventListener('input', () => {
     const query = searchInput.value.trim();
     const filteredResults = filterResults(query);
     showResults(filteredResults);
 });
 
+if(searchInput)
 searchInput.addEventListener('focus', () => {
     showResults(data);
 });
