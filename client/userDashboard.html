@@ -31,7 +31,7 @@
         <section class="newUser-group">
             <div class="searchU">
                 <label class="input-wrapper" data-text="">
-                    <input id="searchInput" type="text" placeholder="Nom usuari...">
+                    <input id="searchInput" type="text" placeholder="Nom de l'usuari...">
                 </label>
                 <div id="searchResults" class="search-results"></div>
             </div>
@@ -49,7 +49,7 @@
             </div>
         </div>
         
-        <div class="container">
+        <div class="container sessionContainer" id="sessionContainer" style="display:none;">
             <div class="grid-container">
                 <div class="info1">
                     <h2>Información General</h2>
@@ -80,6 +80,9 @@
                 </section>
             </div>
         </div>
+        <div id="errorDiv" class="error-message">
+            L'usuari seleccionat no cap sessió creada.
+          </div>
         <script src="js/init.js"></script>
         <script src="js/main.js"></script>
         <script src="js/userDashboard.js"></script>

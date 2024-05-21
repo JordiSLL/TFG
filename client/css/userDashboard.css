@@ -27,10 +27,14 @@
   width: 100%; 
 }
 
+.input-wrapper input {
+  text-align: center;
+}
+
 .container {
   max-width: 1200px;
   margin: 20px auto;
-  padding: 20px;
+  /*padding: 20px;*/
 }
 
 .backButton, .modelButton {
@@ -113,7 +117,17 @@
 .sessions{
   grid-column: span 4;
 }
-
+/*Error MSJ*/
+.error-message {
+  display: none; /* Oculto por defecto */
+  color: red;
+  background-color: #ffe6e6;
+  border: 1px solid red;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 20px 0;
+  text-align: center;
+}
 /*Calendari*/
 
 .calendar {

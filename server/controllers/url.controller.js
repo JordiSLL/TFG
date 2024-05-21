@@ -6,27 +6,27 @@ const fs = require('fs');
 
 const clientPath = path.join(__dirname, '..', 'client');
 
-const renderLoginRegister = (req, res) => {
+exports.renderLoginRegister = (req, res) => {
     res.sendFile(path.join(clientPath, 'loginRegister.html'));
 };
 
-const renderMain = (req, res) => {
+exports.renderMain = (req, res) => {
     res.sendFile(path.join(clientPath, 'main.html'));
 };
 
-const renderDocumentation = (req, res) => {
+exports.renderDocumentation = (req, res) => {
     res.sendFile(path.join(clientPath, 'documentation.html'));
 };
 
-const renderSessionDashboard = (req, res) => {
+exports.renderSessionDashboard = (req, res) => {
     res.sendFile(path.join(clientPath, 'sessionDashboard.html'));
 };
 
-const renderUserDashboard = (req, res) => {
+exports.renderUserDashboard = (req, res) => {
     res.sendFile(path.join(clientPath, 'userDashboard.html'));
 };
 
-const renderVideoDashboard = (req, res) => {
+exports.renderVideoDashboard = (req, res) => {
     res.sendFile(path.join(clientPath, 'videoDashboard.html'));
 };
 
@@ -46,7 +46,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage }).single('video');
 
-const uploadVideo = (req, res) => {
+exports.uploadVideo = (req, res) => {
     upload(req, res, async (err) => {
         console.log(req.body.userId)
         console.log(req.file)
@@ -94,10 +94,9 @@ const uploadVideo = (req, res) => {
     });
 };
 
-const createSession = async (req, res) => {
+exports.createSession = async (req, res) => {
     const session = req.body;
     console.log(session)
-
     if (!session.userId) {
         return res.status(400).send({ message: "Error al crear la sessio" });
     }
@@ -124,15 +123,17 @@ function createDirectory(directory) {
     });
 }
 
-
-
-module.exports = {
-    renderLoginRegister,
-    renderMain,
-    uploadVideo,
-    createSession,
-    renderSessionDashboard,
-    renderUserDashboard,
-    renderVideoDashboard,
-    renderDocumentation
-};
+exports.getSessionsByUserID = async(req, res) =>{
+    const user = req.body;
+    console.log(user)
+    if (!user.userId) {
+        return res.status(400).send({ message: "Error al trobar les sessions de l'usuari" });
+    }
+    try {
+        const sessions = await mongoDBUser.findSessionsByUserId(user.userId);
+        res.status(200).send({ message: "Sense error al busscar les sessions del usuari", sessions: sessions});
+    } catch (error) {
+        console.log("Error al trobar les sessions del usuari", error);
+        res.status(500).send({ message: "Error al trobar les sessions del usuari" });
+    }
+}

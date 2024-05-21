@@ -30,13 +30,22 @@ class MongoDBUser {
     }
   }
 
+  async  findSessionsByUserId(userId) {
+    try {
+      const sessions = await this.collection.find({ userId: userId }).toArray();
+      return sessions;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async addVideoToSession(userId, sessionDate, video) {
     try {
       const result = await this.collection.updateOne(
         { userId: userId, date: sessionDate },
         { $push: { videos: video } }
       );
-      return result.modifiedCount > 0; // Devuelve true si la actualización fue exitosa
+      return result.modifiedCount > 0; 
     } catch (error) {
       throw error;
     }
