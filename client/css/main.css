@@ -255,7 +255,7 @@ input[type="date"].date-input--has-value::-webkit-datetime-edit-year-field {
     border: 1px solid #ccc; 
     border-top: none; 
     border-radius: 0 0 5px 5px; 
-    position: fixed;
+    position: absolute;
     width: 28%;
 }
 

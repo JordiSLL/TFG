@@ -21,6 +21,18 @@ uploadBtn.addEventListener("click", function () {
     batchUpload('upload');
 });
 
+function verificarSelectedUserId() {
+    const selectedUserId = sessionStorage.getItem('selectedUserId');
+    if (selectedUserId) {
+        console.log('El valor de selectedUserId es:', selectedUserId);
+        batchBtn.style.display = 'block';
+        uploadBtn.style.display = 'block';
+        
+    } else {
+        console.log('No hay ningún valor almacenado en selectedUserId');
+    }
+}
+
 function batchUpload(btnClicked) {
     if (btnClicked === 'batch') {
         if (batchBtn.classList.contains("selected")) {
@@ -55,11 +67,17 @@ function disableButtons() {
     newUsaveBtn.disabled = true;
     profileBtn.disabled = true;
     searchInput.disabled = true;
+    mainBtn.disabled = true;
+    documentationBtn.disabled = true;
+    sessionBtn.disabled = true;
 }
 function enableButtons() {
     newUsaveBtn.disabled = false;
     profileBtn.disabled = false;
     searchInput.disabled = false;
+    mainBtn.disabled = false;
+    documentationBtn.disabled = false;
+    sessionBtn.disabled = false;
 }
 
 startButton.addEventListener('click', async () => {
