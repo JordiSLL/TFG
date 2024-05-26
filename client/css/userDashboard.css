@@ -36,6 +36,17 @@
   margin: 20px auto;
   /*padding: 20px;*/
 }
+#sessionContainer,#errorDiv {
+  display: none; 
+  opacity: 0;
+  transition: opacity 0.5s ease, height 0.5s ease;
+}
+
+#sessionContainer.show,#errorDiv.show {
+  display: block;
+  opacity: 1;
+  height: auto; 
+}
 
 .backButton, .modelButton {
   padding: 10px 20px;
@@ -79,7 +90,7 @@
   grid-gap: 20px;
 }
 
-.grid-container > div {
+.grid-container > div, .sessions > div {
   background-color: #fff; 
   /*border: 1px solid #ccc; */
   padding: 20px; 
@@ -89,7 +100,7 @@
   transition: transform 0.2s, box-shadow 0.2s; 
 }
 
-.grid-container > div:hover {
+.grid-container > div:hover, .sessions > div:hover {
   transform: translateY(-5px); 
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
 }
@@ -219,4 +230,45 @@
   .month + .days {
     width: 80%;
 }
+}
+
+/*Sessions*/
+.sessions > div {
+  margin-bottom: 10px;
+}
+
+.sessionDiv{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.textDiv{
+  text-align: left;
+}
+
+.sessionDiv > button {
+  height: 50px;
+}
+
+.textDiv p {
+  margin: 0; 
+  font-size: 16px; 
+  color: #333; 
+}
+
+.analyzeBtn {
+  background-color: #007bff; 
+  color: #fff; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  transition: background-color 0.3s; 
+
+}
+
+.analyzeBtn:hover {
+  background-color: #0056b3; 
 }

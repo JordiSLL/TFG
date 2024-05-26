@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const { ObjectId } = require('mongodb');
 
 class MongoDBUser {
 
@@ -21,9 +22,10 @@ class MongoDBUser {
     }
   }
 
-  async findSessionById(userId, sessionDate) {
+  async findSessionById(sessionId) {
     try {
-      const session = await this.collection.findOne({ userId: userId, date: sessionDate });
+      const objectId = new ObjectId(sessionId);
+      const session = await this.collection.findOne({ _id: objectId });
       return session;
     } catch (error) {
       throw error;

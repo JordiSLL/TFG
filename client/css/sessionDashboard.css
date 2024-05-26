@@ -1,0 +1,138 @@
+body {
+    font-family: system-ui, 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    font-size: medium;
+    padding: 15px;
+    width: 150px;
+}
+
+.backButton {
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    color: #fff;
+}
+
+.backButton:hover {
+    background-color: #fff;
+    color: #007bff;
+    border: 1px solid #007bff;
+}
+
+.modelButtons {
+    display: flex;
+}
+
+.modelButton {
+    background-color: #28a745;
+    color: #fff;
+    margin-left: 10px;
+}
+
+.modelButton:hover {
+    background-color: #519461;
+}
+
+.modelButton.inactive {
+    background-color: #6c757d;
+}
+
+.modelButton.inactive:hover {
+    background-color: #a5aaaf;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+}
+
+.grid-container>div,
+.videos>div {
+    background-color: #fff;
+    /*border: 1px solid #ccc; */
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.grid-container>div:hover,
+.videos>div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.info1 {
+    grid-column: span 1;
+}
+
+.info2 {
+    grid-column: span 1;
+}
+
+.chart1,
+.chart2,
+.chart3 {
+    grid-column: span 2;
+}
+
+.videos {
+    grid-column: span 4;
+}
+
+/*Videos*/
+.videos > div {
+    margin-bottom: 10px;
+  }
+  
+  .sessionDiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .textDiv{
+    text-align: left;
+  }
+  
+  .sessionDiv > button {
+    height: 50px;
+  }
+  
+  .textDiv p {
+    margin: 0; 
+    font-size: 16px; 
+    color: #333; 
+  }
+  
+  .videoBtn {
+    background-color: #007bff; 
+    color: #fff; 
+    border-radius: 5px; 
+  }
+  
+  .videoBtn:hover {
+    background-color: #0056b3; 
+  }

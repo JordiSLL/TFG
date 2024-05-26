@@ -4,7 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/sessionDashboard.css">
 </head>
 <body>
+
+    <div class="container" id="sessionContainer">
+        <div class="header">
+            <button id="backButton" class="backButton">Tornar Enrere</button>
+            <div class="modelButtons">
+                <button id="faceModelButton" class="modelButton">Face Model</button>
+                <button id="speechModelButton" class="modelButton">Speech Model</button>
+                <button id="languageModelButton" class="modelButton">Language Model</button>
+            </div>
+        </div>
+        <div class="grid-container">
+            <div class="info1">
+                <h2>Información General</h2>
+                <div>Sesión ID: <span id="sessionId">0</span></div>
+                <div>Data Sessió: <span id="sessionData">0</span></div>
+                <div>Numero de videos: <span id="videosNumber">0</span></div>
+            </div>
+            <div class="info2">
+                <h2>Resultats Globals del Video</h2>
+                <div></div>
+                
+            </div>
+            <div class="chart1" colspan="2">
+                <h2>Grafic Face Model</h2>
+                <canvas id="chart"></canvas>
+            </div>
+            <div class="chart2" colspan="2">
+                <h2>Grafic FACS Model</h2>
+                <canvas id="chart2"></canvas>
+            </div>
+            <div class="chart3" colspan="2">
+                <h2>Grafic FACS Model</h2>
+                <canvas id="chart2"></canvas>
+            </div>
+            <section class="videos" id="videos">
+            </section>
+        </div>
+    </div>
+    <script src="/js/sessionDashboard.js"></script>
 </body>
 </html>

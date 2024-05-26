@@ -18,6 +18,6 @@ router.get('/videoDashboard/:sessionId/:videoId', auth.checkAuth, controller.ren
 router.post('/uploadVideo', auth.checkAuth, controller.uploadVideo);
 router.post('/createSession', auth.checkAuth, controller.createSession);
 router.post('/getSessionsByUserID', auth.checkAuth, controller.getSessionsByUserID);
-router.post('/getSessionByUserID', auth.checkAuth, controller.createSession);
+router.post('/getSessionByID', auth.checkAuth, controller.getSessionByID);
 
 module.exports = router;

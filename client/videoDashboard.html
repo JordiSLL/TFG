@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styleDSVideo.css">
+    <link rel="stylesheet" href="/css/videoDashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Dashboard</title>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <button id="backButton" class="backButton">Volver</button>
+            <button id="backButton" class="backButton">Tornar Enrere</button>
             <div class="modelButtons">
                 <button id="faceModelButton" class="modelButton">Face Model</button>
                 <button id="speechModelButton" class="modelButton">Speech Model</button>
@@ -45,12 +45,10 @@
                 <h2>Grafic FACS Model</h2>
                 <canvas id="chart2"></canvas>
             </div>
-            <div class="analyzedText" id="analyzedText">
-            </div>
+            <section class="analyzedText" id="analyzedText">
+            </section>
         </div>
     </div>
-    <script src="config-chart.js"></script>
-    <script src="iniPred.js"></script>
-    <script src="test.js"></script>
+    <script src="/js/videoDashboard.js"></script>
 </body>
 </html>

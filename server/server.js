@@ -35,7 +35,7 @@ app.use('/api/pacient', PacientRouter);
 app.use('/', UrlRouter);
 
 app.use((req, res) => {
-    res.redirect('/');
+    res.redirect('/main');
   });
 
 app.listen(port, () => {

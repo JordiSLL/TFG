@@ -19,6 +19,7 @@ exports.renderDocumentation = (req, res) => {
 };
 
 exports.renderSessionDashboard = (req, res) => {
+    console.log(req.params.sessionId)
     res.sendFile(path.join(clientPath, 'sessionDashboard.html'));
 };
 
@@ -102,6 +103,8 @@ exports.createSession = async (req, res) => {
     }
     if (!session.date) session.date = model.generateUniqueId();
     session.videos = [];
+    session.IdEstado = 1;
+    //session.emociones = [Prosody, Language, Face]
     console.log(session)
     try {
         const sessionId = await mongoDBUser.create(session);
@@ -135,5 +138,20 @@ exports.getSessionsByUserID = async(req, res) =>{
     } catch (error) {
         console.log("Error al trobar les sessions del usuari", error);
         res.status(500).send({ message: "Error al trobar les sessions del usuari" });
+    }
+}
+
+exports.getSessionByID = async(req, res) =>{
+    const sessionId = req.body;
+    if (!sessionId.sessionId) {
+        return res.status(400).send({ message: "Error al trobar la sessió de l'usuari" });
+    }
+    try {
+        const session = await mongoDBUser.findSessionById(sessionId.sessionId);
+        console.log(session)
+        res.status(200).send({ message: "Sense error al busscar la sessió del usuari", session: session});
+    } catch (error) {
+        console.log("Error al trobar la sessió del usuari", error);
+        res.status(500).send({ message: "Error al trobar la sessió del usuari" });
     }
 }

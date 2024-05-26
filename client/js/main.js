@@ -28,7 +28,7 @@ function handleNavigation(event) {
             if (!response.ok) {
                 throw new Error('Error al cambiar de página');
             }
-            location.assign(url);
+            window.location.href = url;
         })
         .catch(error => {
             console.error('Error:', error);
@@ -223,6 +223,7 @@ function showResults(results) {
 
 function selectUser(userId, userName) {
     sessionStorage.setItem('selectedUserId', userId);
+    sessionStorage.setItem('selectedUserName', userName);
     searchInput.value = userName;
     verificarSelectedUserId();
     searchResults.innerHTML = '';

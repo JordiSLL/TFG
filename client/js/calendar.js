@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
         </div>
         <div class="legend-item">
           <div class="box sessionCalendar level-3"></div>
-          <div class="text">No assistit (Groc)</div>
+          <div class="text">Pendent d'analitzar (Groc)</div>
         </div>
       </div>
     `;
