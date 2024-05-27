@@ -7,4 +7,6 @@ router.post('/create',auth.checkAuth, pacientController.create);
 
 router.get('/',auth.checkAuth, pacientController.findAllbyAtrribute);
 
+router.post('/pacient',auth.checkAuth, pacientController.findPacientById);
+
 module.exports = router;

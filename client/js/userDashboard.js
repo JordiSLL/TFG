@@ -2,11 +2,13 @@ const sessionContainer = document.getElementById('sessionContainer');
 const errorMSJ = document.getElementById('errorDiv');
 const sessionsContainer = document.getElementById('sessions');
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded',async  function() {
     const { userId } = getUrlParams();
     console.log(userId)
     if (userId) {
-        searchInput.value = sessionStorage.getItem('selectedUserName');
+        const a = await fetchUser();
+        console.log(a)
+        searchInput.value = a;
         fetchsession(userId);
     }
 });
@@ -55,6 +57,26 @@ function fetchsession(userId) {
         .catch(error => {
             console.error('Fetch error:', error);
         });
+}
+
+async function fetchUser() {
+    const { userId } = getUrlParams();
+    try {
+        const response = await fetch('/api/pacient/pacient', {
+            method: 'POST',
+            body: JSON.stringify({ userId: userId }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data.user.name;
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return ''; 
+    }
 }
 
 function createSessionsDiv(sessions) {
