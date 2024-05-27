@@ -119,16 +119,20 @@ exports.uploadVideo = (req, res) => {
         const userId = req.body.userId;
         const currentSession = req.body.SessionDate;
         const currentVideo = model.generateUniqueId();
+        const videoDir = path.join(__dirname, '..', 'uploads', 'user', userId, "session", currentSession, "videos", currentVideo);
+
         const video = {
-            path: currentVideo
+            id: currentVideo,
+            path:videoDir
         };
 
         if (!userId) {
             return res.status(400).json({ message: 'Missing userId' });
         }
+
         const updateSuccess = await mongoDBSession.addVideoToSession(userId, currentSession, video);
 
-        const videoDir = path.join(__dirname, '..', 'uploads', 'user', userId, "session", currentSession, "videos", currentVideo);
+        
 
         createDirectory(videoDir);
         const filePath = path.join(videoDir, "video.webm");
@@ -172,6 +176,27 @@ exports.createSession = async (req, res) => {
         console.log("Error en la creació", error);
         res.status(500).send({ message: "Error al crear la sessió" });
     }
+};
+
+exports.getprediction = async (req, res) => {
+    const video = req.body;
+    console.log(video.videoPath)
+    const predictionPath = path.join(video.videoPath,'predictions.json');
+    fs.readFile(predictionPath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error al leer el archivo JSON:', err);
+            res.status(500).json({ error: 'Error al leer el archivo JSON' });
+            return;
+        }
+
+        try {
+            const sessionData = JSON.parse(data);
+            res.json(sessionData);
+        } catch (parseErr) {
+            console.error('Error al parsear el archivo JSON:', parseErr);
+            res.status(500).json({ error: 'Error al parsear el archivo JSON' });
+        }
+    });
 };
 
 function createDirectory(directory) {

@@ -22,6 +22,63 @@ function getUrlParams() {
     return { userId, sessionId, videoId };
 }
 document.addEventListener('DOMContentLoaded', function () {
+    fetchSession()
+
+});
+
+async function fetchSession(){
+    try {
+        const { sessionId } = getUrlParams();
+        const { videoId } = getUrlParams();
+        const response = await fetch('/getSessionByID', {
+            method: 'POST',
+            body: JSON.stringify({ sessionId: sessionId }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log(data.session.videos.find(video => video.id === videoId));
+        const videoPath = data.session.videos.find(video => video.id === videoId).path;
+        fetchVideoPrediction(videoPath)
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return ''; 
+    }
+}
+
+async function fetchVideoPrediction(videoPath){
+    try {
+        console.log(videoPath)
+        const response = await fetch('/getVideoPrediction', {
+            method: 'POST',
+            body: JSON.stringify({ videoPath: videoPath }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log(data)
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return ''; 
+    }
+}
+
+
+
+
+
+
+
+
+
+/*
+document.addEventListener('DOMContentLoaded', function () {
     async function fetchData() {
         try {
             const response = await fetch('../predictions-d4a1b4e2-0b6f-499c-914b-ccf13ba1ad62.json');
@@ -161,4 +218,4 @@ function calcularMedia(emotions1, emotions2) {
     });
     return media;
 }
-
+*/
