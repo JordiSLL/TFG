@@ -102,6 +102,8 @@ button {
 
 .analyzedText2 {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
 }
 
@@ -118,3 +120,19 @@ button {
     padding: 5px 0;
     text-align: left;
 }
+
+/*Frases*/
+.text-content, .chart-container {
+    flex:1;
+}
+
+.chart-container {
+    display: flex;
+    justify-content: center; /* Center the canvas horizontally */
+    align-items: center; /* Center the canvas vertically */
+}
+
+#chart-doughnut0{
+    margin-left: -50px;
+}
+

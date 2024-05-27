@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-async function fetchSession(){
+async function fetchSession() {
     try {
         const { sessionId } = getUrlParams();
         const { videoId } = getUrlParams();
@@ -40,18 +40,16 @@ async function fetchSession(){
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        console.log(data.session.videos.find(video => video.id === videoId));
         const videoPath = data.session.videos.find(video => video.id === videoId).path;
         fetchVideoPrediction(videoPath)
     } catch (error) {
         console.error('Fetch error:', error);
-        return ''; 
+        return '';
     }
 }
 
-async function fetchVideoPrediction(videoPath){
+async function fetchVideoPrediction(videoPath) {
     try {
-        console.log(videoPath)
         const response = await fetch('/getVideoPrediction', {
             method: 'POST',
             body: JSON.stringify({ videoPath: videoPath }),
@@ -63,15 +61,100 @@ async function fetchVideoPrediction(videoPath){
         }
         const data = await response.json();
         console.log(data)
+        //Asignacions de variables
+        var models = data[0].results.predictions[0].models;
+        listaProsody = obtenerListasConTopEmociones(models.prosody);
+        listaLanguage = obtenerListasConTopEmociones(models.language);
+        createTextDiv();
     } catch (error) {
         console.error('Fetch error:', error);
-        return ''; 
+        return '';
     }
 }
+var analyzedData = [
+];
 
+function createTextDiv() {
 
+    analyzedData = listaLanguage;
+    var analyzedTextContainer = document.getElementById('analyzedText');
+    analyzedTextContainer.innerHTML = "";
+    analyzedData.forEach(function (data, index) {
+        var textDiv = document.createElement('div');
+        textDiv.classList.add('analyzedText2');
+        var textContentDiv = document.createElement('div');
+        textContentDiv.classList.add('text-content');
+        var textElement = document.createElement('p');
+        textElement.innerHTML = "<strong>Text:</strong> " + data.texto;
+        textContentDiv.appendChild(textElement);
+        var timeElement = document.createElement('p');
+        timeElement.innerHTML = "<strong>Temps Inici:</strong> " + data.tiempo.begin.toFixed(2) 
+        + "s <br><strong>Temps Final:</strong> " + data.tiempo.end.toFixed(2) + "s";
+        textContentDiv.appendChild(timeElement);
+        var chartDiv = document.createElement('div');
+        chartDiv.classList.add('chart-container');
+        var chartCanvas = document.createElement('canvas');
+        chartCanvas.id = "chart-doughnut" + index;
+        chartCanvas.width = 400;
+        chartCanvas.height = 200;
+        textDiv.appendChild(textContentDiv);
+        chartDiv.appendChild(chartCanvas);
+        textDiv.appendChild(chartDiv);
+        analyzedTextContainer.appendChild(textDiv);
+        createChart(data, chartCanvas);
+    })
+}
 
+function createChart(data, chartCanvas) {
 
+    var top5Emotions = data.emociones.slice(0, 5).map(emotion => emotion.name);
+    var top5EmotionsScores = data.emociones.slice(0, 5).map(emotion => emotion.score);
+    var chartData = {
+        labels: top5Emotions,
+        datasets: [{
+            data: top5EmotionsScores,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(75, 192, 192, 0.5)',
+                'rgba(153, 102, 255, 0.5)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1,
+            hoverOffset: 20
+        }]
+    };
+    var chartOptions = {
+        responsive: false,
+        maintainAspectRatio: false,
+        layout: {
+            padding: 15
+        },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'right',
+            }
+        },
+        animation: {
+            duration: 2000,
+            easing: 'easeInOutQuad'
+        }
+    };
+    var ctx = chartCanvas.getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: chartData,
+        options: chartOptions
+    });
+}
 
 
 
@@ -107,28 +190,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     fetchData();
-});
+});*/
 
 // Función para obtener el top 5 de emociones
 function obtenerListasConTopEmociones(modelo) {
     const listas = [];
     modelo.grouped_predictions.forEach(predictionGroup => {
-      predictionGroup.predictions.forEach(prediction => {
-        const lista = {
-          texto: prediction.text,
-          tiempo: prediction.time,
-          emociones: obtenerTopEmociones(prediction.emotions)
-        };
-        listas.push(lista);
-      });
+        predictionGroup.predictions.forEach(prediction => {
+            const lista = {
+                texto: prediction.text,
+                tiempo: prediction.time,
+                emociones: obtenerTopEmociones(prediction.emotions)
+            };
+            listas.push(lista);
+        });
     });
     return listas;
-  }
-  
-  function obtenerTopEmociones(emociones) {
+}
+
+function obtenerTopEmociones(emociones) {
     emociones.sort((a, b) => b.score - a.score);
     return emociones.slice(0, 5);
-  }
+}
 
 // Función para calcular la media de emociones de todas las frases
 function calcularMediaEmociones(listas) {
@@ -218,4 +301,20 @@ function calcularMedia(emotions1, emotions2) {
     });
     return media;
 }
-*/
+
+function toggleButton(buttonId) {
+    var button = document.getElementById(buttonId);
+    button.classList.toggle('inactive');
+}
+
+document.getElementById('faceModelButton').addEventListener('click', function () {
+    toggleButton('faceModelButton');
+});
+
+document.getElementById('speechModelButton').addEventListener('click', function () {
+    toggleButton('speechModelButton');
+});
+
+document.getElementById('languageModelButton').addEventListener('click', function () {
+    toggleButton('languageModelButton');
+});
