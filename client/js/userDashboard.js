@@ -3,12 +3,11 @@ const errorMSJ = document.getElementById('errorDiv');
 const sessionsContainer = document.getElementById('sessions');
 
 document.addEventListener('DOMContentLoaded', function() {
-    const userId = localStorage.getItem('userId');
+    const { userId } = getUrlParams();
     console.log(userId)
     if (userId) {
         searchInput.value = sessionStorage.getItem('selectedUserName');
         fetchsession(userId);
-        localStorage.removeItem('userId');
     }
 });
 
@@ -119,7 +118,11 @@ function createSessionsDiv(sessions) {
 
 function navigateSession() {
     const sessionId = this.dataset.sessionId;
-    fetch(`/sessionDashboard/${sessionId}`, {
+    var { userId } = getUrlParams();
+    if (!userId){
+        userId = sessionStorage.getItem('selectedUserId');
+    }
+    fetch(`/Dashboard/${userId}/${sessionId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'text/html' 
@@ -129,7 +132,7 @@ function navigateSession() {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return window.location.href =`/sessionDashboard/${sessionId}`;
+        return window.location.href =`/Dashboard/${userId}/${sessionId}`;
     })
     .then(data => {
         console.log(data);
@@ -137,6 +140,17 @@ function navigateSession() {
     .catch(error => {
         console.error('There has been a problem with your fetch operation:', error);
     });
+}
+
+function getUrlParams() {
+    const url = new URL(window.location.href);
+    const params = url.pathname.split('/').filter(param => param);
+    const dashboardIndex = params.indexOf('Dashboard');
+    const userId = params[dashboardIndex + 1] || null;
+    const sessionId = params[dashboardIndex + 2] || null;
+    const videoId = params[dashboardIndex + 3] || null;
+
+    return { userId, sessionId, videoId };
 }
 
 function analyzeSession(){

@@ -4,14 +4,16 @@ const sessionsContainer = document.getElementById("videos")
 backButton.addEventListener("click", returnUserSession);
 
 document.addEventListener('DOMContentLoaded', function () {
-    const sessionId = getSessionIdFromUrl();
+    const { sessionId } = getUrlParams();
     console.log('ID de la sesión:', sessionId);
+    if (sessionId)
     fetchsession(sessionId)
 });
 
 function returnUserSession() {
-    localStorage.setItem('userId', sessionStorage.getItem('selectedUserId'));
-    window.location.href = "/userDashboard";
+    const { userId } = getUrlParams();
+    console.log("User ID: "+userId)
+    window.location.href = "/Dashboard/"+userId;
 }
 
 function fetchsession(sessionId) {
@@ -61,8 +63,8 @@ function createVideoDiv(sessions) {
         //chart
         var videoBtn = document.createElement("button");
         videoBtn.classList.add('videoBtn');
-        console.log(video.path)
-        videoBtn.dataset.path = video.path;
+        console.log(video.id)
+        videoBtn.dataset.id = video.id;
         videoBtn.textContent = "Anar al video"
         videoBtn.addEventListener('click', navigateVideo);
         sesionDiv.appendChild(videoBtn);
@@ -72,9 +74,10 @@ function createVideoDiv(sessions) {
 }
 
 function navigateVideo() {
-    const sessionId = getSessionIdFromUrl();
-    const videoID = this.dataset.path;
-    fetch(`/videoDashboard/${sessionId}/${videoID}`, {
+    const videoID = this.dataset.id;
+    const { userId } = getUrlParams();
+    const { sessionId } = getUrlParams();
+    fetch(`/Dashboard/${userId}/${sessionId}/${videoID}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'text/html'
@@ -84,7 +87,7 @@ function navigateVideo() {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            return window.location.href = `/videoDashboard/${sessionId}/${videoID}`;
+            return window.location.href = `/Dashboard/${userId}/${sessionId}/${videoID}`;
         })
         .then(data => {
             console.log(data);
@@ -94,10 +97,15 @@ function navigateVideo() {
         });
 }
 
-function getSessionIdFromUrl() {
-    const url = window.location.href;
-    const segments = url.split('/');
-    return segments[segments.length - 1];
+function getUrlParams() {
+    const url = new URL(window.location.href);
+    const params = url.pathname.split('/').filter(param => param);
+    const dashboardIndex = params.indexOf('Dashboard');
+    const userId = params[dashboardIndex + 1] || null;
+    const sessionId = params[dashboardIndex + 2] || null;
+    const videoId = params[dashboardIndex + 3] || null;
+
+    return { userId, sessionId, videoId };
 }
 
 function getDate() {

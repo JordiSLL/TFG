@@ -20,7 +20,7 @@ function handleNavigation(event) {
             url = '/documentation';  
             break;
         case 'filter':
-            url = '/userDashboard';  
+            url = '/Dashboard';  
             break;
     }
     fetch(url)

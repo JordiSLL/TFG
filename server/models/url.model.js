@@ -24,8 +24,14 @@ class MongoDBUser {
 
   async findSessionById(sessionId) {
     try {
+      if (!ObjectId.isValid(sessionId)) {
+        return { error: 'Invalid sessionId format' };
+    }
       const objectId = new ObjectId(sessionId);
       const session = await this.collection.findOne({ _id: objectId });
+      if(!session){
+        return { error: 'Session not found' };
+      }
       return session;
     } catch (error) {
       throw error;
@@ -52,6 +58,7 @@ class MongoDBUser {
       throw error;
     }
   }
+  
 }
 
 const generateUniqueId = () => {

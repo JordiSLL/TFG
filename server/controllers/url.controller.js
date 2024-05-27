@@ -1,7 +1,9 @@
 const path = require('path');
 const multer = require('multer');
 const model = require('../models/url.model');
-const mongoDBUser = new model.MongoDBUser();
+const mongoDBSession = new model.MongoDBUser();
+const modelPacient = require('../models/pacient.model');
+const mongoDBpacient = new modelPacient()
 const fs = require('fs');
 
 const clientPath = path.join(__dirname, '..', 'client');
@@ -18,16 +20,71 @@ exports.renderDocumentation = (req, res) => {
     res.sendFile(path.join(clientPath, 'documentation.html'));
 };
 
-exports.renderSessionDashboard = (req, res) => {
-    console.log(req.params.sessionId)
-    res.sendFile(path.join(clientPath, 'sessionDashboard.html'));
-};
-
-exports.renderUserDashboard = (req, res) => {
+exports.renderUserDashboard = async (req, res) => {
+    console.log(req.params.userId);
+    if (req.params.userId) {
+        var user = await mongoDBpacient.getUserById(req.params.userId);
+        //console.log(user)
+        if (user.error) {
+            console.log('Error:', user.error);
+            return res.redirect('/main');
+        }
+    }
     res.sendFile(path.join(clientPath, 'userDashboard.html'));
 };
 
-exports.renderVideoDashboard = (req, res) => {
+exports.renderSessionDashboard = async (req, res) => {
+    console.log(req.params.sessionId)
+    if (req.params.userId) {
+        var user = await mongoDBpacient.getUserById(req.params.userId);
+        //console.log(user)
+        if (user.error) {
+            console.log('Error:', user.error);
+            return res.redirect('/main');
+        }
+    }
+    if (req.params.sessionId) {
+        var session = await mongoDBSession.findSessionById(req.params.sessionId);
+        //console.log(session)
+        if (session.error) {
+            console.log('Error:', session.error);
+            return res.redirect('/main');
+        }else{
+            const userSessionVerif = session.userId === req.params.userId;
+            if (!userSessionVerif) {
+                return res.redirect('/main');
+            }
+        }
+    }
+    res.sendFile(path.join(clientPath, 'sessionDashboard.html'));
+};
+
+exports.renderVideoDashboard = async (req, res) => {
+    if (req.params.userId) {
+        var user = await mongoDBpacient.getUserById(req.params.userId);
+        //console.log(user)
+        if (user.error) {
+            console.log('Error:', user.error);
+            return res.redirect('/main');
+        }
+    }
+    if (req.params.sessionId) {
+        var session = await mongoDBSession.findSessionById(req.params.sessionId);
+        //console.log(session)
+        if (session.error) {
+            console.log('Error:', session.error);
+            return res.redirect('/main');
+        } else {
+            const userSessionVerif = session.userId === req.params.userId;
+            if (!userSessionVerif) {
+                return res.redirect('/main');
+            }
+            const videoExists = session.videos.some(video => video.id === req.params.videoId);
+            if (!videoExists) {
+                return res.redirect('/main');
+            }
+        }
+    }
     res.sendFile(path.join(clientPath, 'videoDashboard.html'));
 };
 
@@ -69,7 +126,7 @@ exports.uploadVideo = (req, res) => {
         if (!userId) {
             return res.status(400).json({ message: 'Missing userId' });
         }
-        const updateSuccess = await mongoDBUser.addVideoToSession(userId, currentSession, video);
+        const updateSuccess = await mongoDBSession.addVideoToSession(userId, currentSession, video);
 
         const videoDir = path.join(__dirname, '..', 'uploads', 'user', userId, "session", currentSession, "videos", currentVideo);
 
@@ -107,7 +164,7 @@ exports.createSession = async (req, res) => {
     //session.emociones = [Prosody, Language, Face]
     console.log(session)
     try {
-        const sessionId = await mongoDBUser.create(session);
+        const sessionId = await mongoDBSession.create(session);
         const sessionDir = path.join(__dirname, '..', 'uploads', 'user', session.userId, "session", session.date, "videos");
         createDirectory(sessionDir);
         res.status(200).send({ message: "Sessio creada correctament", sessionDate: session.date, sessionId: sessionId });
@@ -126,30 +183,30 @@ function createDirectory(directory) {
     });
 }
 
-exports.getSessionsByUserID = async(req, res) =>{
+exports.getSessionsByUserID = async (req, res) => {
     const user = req.body;
     console.log(user)
     if (!user.userId) {
         return res.status(400).send({ message: "Error al trobar les sessions de l'usuari" });
     }
     try {
-        const sessions = await mongoDBUser.findSessionsByUserId(user.userId);
-        res.status(200).send({ message: "Sense error al busscar les sessions del usuari", sessions: sessions});
+        const sessions = await mongoDBSession.findSessionsByUserId(user.userId);
+        res.status(200).send({ message: "Sense error al busscar les sessions del usuari", sessions: sessions });
     } catch (error) {
         console.log("Error al trobar les sessions del usuari", error);
         res.status(500).send({ message: "Error al trobar les sessions del usuari" });
     }
 }
 
-exports.getSessionByID = async(req, res) =>{
+exports.getSessionByID = async (req, res) => {
     const sessionId = req.body;
     if (!sessionId.sessionId) {
         return res.status(400).send({ message: "Error al trobar la sessió de l'usuari" });
     }
     try {
-        const session = await mongoDBUser.findSessionById(sessionId.sessionId);
+        const session = await mongoDBSession.findSessionById(sessionId.sessionId);
         console.log(session)
-        res.status(200).send({ message: "Sense error al busscar la sessió del usuari", session: session});
+        res.status(200).send({ message: "Sense error al busscar la sessió del usuari", session: session });
     } catch (error) {
         console.log("Error al trobar la sessió del usuari", error);
         res.status(500).send({ message: "Error al trobar la sessió del usuari" });
