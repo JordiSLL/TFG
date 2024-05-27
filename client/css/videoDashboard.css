@@ -128,8 +128,8 @@ button {
 
 .chart-container {
     display: flex;
-    justify-content: center; /* Center the canvas horizontally */
-    align-items: center; /* Center the canvas vertically */
+    justify-content: center; 
+    align-items: center; 
 }
 
 #chart-doughnut0{

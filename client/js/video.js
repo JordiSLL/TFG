@@ -3,6 +3,8 @@ const stopButton = document.getElementById('stopButton');
 const finishButton = document.getElementById('finishButton');
 const videoElement = document.getElementById('video');
 
+const customcheckbox = document.getElementById('custom-checkbox');
+const questionariMode = document.getElementById('questionariMode');
 const batchBtn = document.getElementById('batch-btn');
 const uploadBtn = document.getElementById('upload-btn');
 const uploadVideoDiv = document.getElementById('uploadVideo');
@@ -27,7 +29,8 @@ function verificarSelectedUserId() {
         console.log('El valor de selectedUserId es:', selectedUserId);
         batchBtn.style.display = 'block';
         uploadBtn.style.display = 'block';
-        
+        customcheckbox.style.display = 'flex';
+
     } else {
         console.log('No hay ningún valor almacenado en selectedUserId');
     }
@@ -70,6 +73,7 @@ function disableButtons() {
     mainBtn.disabled = true;
     documentationBtn.disabled = true;
     sessionBtn.disabled = true;
+    questionariMode.disabled = true;
 }
 function enableButtons() {
     newUsaveBtn.disabled = false;
@@ -78,6 +82,7 @@ function enableButtons() {
     mainBtn.disabled = false;
     documentationBtn.disabled = false;
     sessionBtn.disabled = false;
+    questionariMode.disabled = false;
 }
 
 startButton.addEventListener('click', async () => {
@@ -157,30 +162,30 @@ stopButton.addEventListener('click', () => {
 finishButton.addEventListener('click', () => {
     // Crear una promesa que se resolverá cuando se dispare el evento 'stop'
     const stopRecording = new Promise((resolve, reject) => {
-      mediaRecorder.addEventListener('stop', resolve);
-      mediaRecorder.addEventListener('error', reject);
+        mediaRecorder.addEventListener('stop', resolve);
+        mediaRecorder.addEventListener('error', reject);
     });
 
     mediaRecorder.stop();
-  
+
     // Esperamos a que se dispare el evento 'stop'
     stopRecording.then(() => {
-      videoStream.getTracks().forEach(track => track.stop());
-      videoElement.srcObject = null;
-      startButton.disabled = false;
-      stopButton.disabled = true;
-      finishButton.disabled = false;
-      batchBtn.disabled = false;
-      uploadBtn.disabled = false;
-      finishButton.disabled = true;
-      videoBatchDiv.style.display = "none";
-      batchBtn.classList.remove("selected");
-      enableButtons();
-      sessionStorage.removeItem('currentSession');
+        videoStream.getTracks().forEach(track => track.stop());
+        videoElement.srcObject = null;
+        startButton.disabled = false;
+        stopButton.disabled = true;
+        finishButton.disabled = false;
+        batchBtn.disabled = false;
+        uploadBtn.disabled = false;
+        finishButton.disabled = true;
+        videoBatchDiv.style.display = "none";
+        batchBtn.classList.remove("selected");
+        enableButtons();
+        sessionStorage.removeItem('currentSession');
     }).catch(error => {
-      console.error('Error stopping the media recorder:', error);
+        console.error('Error stopping the media recorder:', error);
     });
-  });
+});
 
 // Función para manejar los datos disponibles durante la grabación
 function handleDataAvailable(event) {
@@ -222,3 +227,9 @@ async function handleStop() {
     stopButton.disabled = true;
     finishButton.disabled = false;
 }
+
+const checkbox = document.querySelector('.custom-checkbox input');
+checkbox.addEventListener('change', function () {
+    console.log('Checkbox checked:', checkbox.checked);
+});
+
