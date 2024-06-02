@@ -237,3 +237,35 @@ exports.getSessionByID = async (req, res) => {
         res.status(500).send({ message: "Error al trobar la sessió del usuari" });
     }
 }
+
+exports.getVideo = async (req, res) => {
+    if (req.params.userId) {
+        var user = await mongoDBpacient.getUserById(req.params.userId);
+        //console.log(user)
+        if (user.error) {
+            console.log('Error:', user.error);
+            return res.status(500).send({ message: "Error al trobar la sessió del usuari" });
+        }
+    }
+    if (req.params.sessionId) {
+        var session = await mongoDBSession.findSessionById(req.params.sessionId);
+        //console.log(session)
+        if (session.error) {
+            console.log('Error:', session.error);
+            return res.status(500).send({ message: "Error al trobar l'usuari" });
+        } else {
+            const userSessionVerif = session.userId === req.params.userId;
+            if (!userSessionVerif) {
+                return res.status(500).send({ message: "Error al trobar la sessió del usuari" });
+            }
+            const videoExists = session.videos.some(video => video.id === req.params.videoId);
+            if (!videoExists) {
+                return res.status(500).send({ message: "Error al trobar el video de la sessió del usuari" });
+            }
+            const video = session.videos.find(video => video.id === req.params.videoId);
+            //console.log(path.join(video.path, 'test.mkv'));
+            res.sendFile(path.join(video.path, 'video.mp4'));
+        }
+    }
+    //return res.status(500).send({ message: "Error al trobar el video de la sessió del usuari" });
+}

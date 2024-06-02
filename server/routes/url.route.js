@@ -15,6 +15,7 @@ router.get(['/Dashboard', '/Dashboard/:userId'], auth.checkAuth, controller.rend
 router.get('/Dashboard/:userId/:sessionId', auth.checkAuth, controller.renderSessionDashboard);
 router.get('/Dashboard/:userId/:sessionId/:videoId', auth.checkAuth, controller.renderVideoDashboard);
 //Session and video routes
+router.get('/video/:userId/:sessionId/:videoId', auth.checkAuth, controller.getVideo);
 router.post('/uploadVideo', auth.checkAuth, controller.uploadVideo);
 router.post('/createSession', auth.checkAuth, controller.createSession);
 router.post('/getSessionsByUserID', auth.checkAuth, controller.getSessionsByUserID);

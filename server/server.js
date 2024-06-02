@@ -2,9 +2,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-//const multer = require('multer');
 const cors = require('cors')
-//const fs = require('fs');
 
 const config = require('./config/config');
 const UserRouter = require("./routes/user.route");
@@ -13,13 +11,14 @@ const PacientRouter = require('./routes/pacient.route');
 
 const port = config.PORT; 
 
-//app.use(cors());
-//const upload = multer({ dest: 'uploads/' });
+app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
 app.use('/api/users', UserRouter);
+app.use('/api/pacient', PacientRouter);
+app.use('/', UrlRouter);
 
 app.use('/api/users', (req, res, next) => {
   const origin = req.get('origin');
@@ -29,10 +28,6 @@ app.use('/api/users', (req, res, next) => {
     res.redirect('/');
   }
 }, UserRouter);
-
-app.use('/api/pacient', PacientRouter);
-
-app.use('/', UrlRouter);
 
 app.use((req, res) => {
     res.redirect('/main');
