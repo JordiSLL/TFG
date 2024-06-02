@@ -110,9 +110,9 @@ function getUrlParams() {
 
 function getDate() {
     const dateString = session.date;
-    const year = dateString.slice(4, 6);
+    const day = dateString.slice(4, 6);
     const month = dateString.slice(2, 4);
-    const day = dateString.slice(0, 2);
+    const year = dateString.slice(0, 2);
     const hour = dateString.slice(6, 8);
     const minute = dateString.slice(8, 10);
     const second = dateString.slice(10);

@@ -1,4 +1,11 @@
 const backButton = document.getElementById("backButton");
+const sessionIdDiv = document.getElementById("sessionId");
+const sessionDataDiv = document.getElementById("sessionData");
+const sessionHourDiv = document.getElementById("sessionHour");
+const videoIdDiv = document.getElementById("videoId");
+const videoDurationDiv = document.getElementById("videoDuration");
+const phraseNumberDiv = document.getElementById("phraseNumber");
+ 
 backButton.addEventListener("click", returnUserSession);
 
 var listProsody = [];
@@ -33,6 +40,8 @@ document.addEventListener('DOMContentLoaded', function () {
 async function fetchSession() {
     try {
         const { sessionId, videoId } = getUrlParams();
+        sessionIdDiv.textContent = sessionId;
+        videoIdDiv.textContent =videoId;
         const response = await fetch('/getSessionByID', {
             method: 'POST',
             body: JSON.stringify({ sessionId: sessionId }),
@@ -42,6 +51,7 @@ async function fetchSession() {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        getDate(data.session);
         const videoPath = data.session.videos.find(video => video.id === videoId).path;
         fetchVideo();
         fetchVideoPrediction(videoPath)
@@ -50,12 +60,31 @@ async function fetchSession() {
         return '';
     }
 }
+
+function getDate(session) {
+    console.log(session)
+    const dateString = session.date;
+    const day = dateString.slice(4, 6);
+    const month = dateString.slice(2, 4);
+    const year = dateString.slice(0, 2);
+    const hour = dateString.slice(6, 8);
+    const minute = dateString.slice(8, 10);
+    const second = dateString.slice(10);
+
+    sessionHourDiv.textContent = `${hour}:${minute}:${second}`;
+    sessionDataDiv.textContent = `${day}-${month}-20${year}`;
+}
+
 //Obtenim el video mp4
 function fetchVideo() {
     const { userId, sessionId, videoId } = getUrlParams();
     const videoUrl = `/video/${userId}/${sessionId}/${videoId}`;
+    const videoElement = document.getElementById('video');
     document.getElementById('video-source').src = videoUrl;
-    document.getElementById('video').load();
+    videoElement.load();
+    videoElement.addEventListener('loadedmetadata', function() {
+        videoDurationDiv.textContent = videoElement.duration.toFixed(2) + ' segons';
+    });
 }
 //Obtenim el json amb les emocions del video
 async function fetchVideoPrediction(videoPath) {
@@ -164,7 +193,6 @@ function createFaceChart(models) {
         emotionArray.forEach(emotion => {
             if (topEmotions.includes(emotion.name)) {
                 if (!emotionNames.includes(emotion.name)) {
-                    console.log("HEREE")
                     emotionNames.push(emotion.name);
                     const dataset = {
                         label: emotion.name,
@@ -422,6 +450,7 @@ function createTextDiv() {
     var analyzedData = listFraseMedia;
     var analyzedTextContainer = document.getElementById('analyzedText');
     analyzedTextContainer.innerHTML = "";
+    phraseNumberDiv.textContent = analyzedData.length
     analyzedData.forEach(function (data, index) {
         var textDiv = document.createElement('div');
         textDiv.classList.add('analyzedText2');
