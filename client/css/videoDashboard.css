@@ -156,3 +156,7 @@ div > h2{
 @media (max-width: 1220px) {
    
 }
+
+#chart-doughnut0{
+    margin-left: -50px;
+}

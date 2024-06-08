@@ -106,7 +106,7 @@ async function fetchVideoPrediction(videoPath) {
 
         listFraseProsody = getListsTopEmotions(models.prosody);
         listFraseLanguage = getListsTopEmotions(models.language);
-        listFraseMedia = getAvgEmotionsText(listFraseProsody,listFraseLanguage)
+        listFraseMedia = getAvgEmotionsText(listFraseLanguage,listFraseProsody)
 
         listProsody = combineEmotions(listFraseProsody);
         listLanguage = combineEmotions(listFraseLanguage);

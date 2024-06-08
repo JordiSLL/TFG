@@ -26,10 +26,10 @@ class MongoDBUser {
     try {
       if (!ObjectId.isValid(sessionId)) {
         return { error: 'Invalid sessionId format' };
-    }
+      }
       const objectId = new ObjectId(sessionId);
       const session = await this.collection.findOne({ _id: objectId });
-      if(!session){
+      if (!session) {
         return { error: 'Session not found' };
       }
       return session;
@@ -38,7 +38,7 @@ class MongoDBUser {
     }
   }
 
-  async  findSessionsByUserId(userId) {
+  async findSessionsByUserId(userId) {
     try {
       const sessions = await this.collection.find({ userId: userId }).toArray();
       return sessions;
@@ -53,21 +53,36 @@ class MongoDBUser {
         { userId: userId, date: sessionDate },
         { $push: { videos: video } }
       );
-      return result.modifiedCount > 0; 
+      return result.modifiedCount > 0;
     } catch (error) {
       throw error;
     }
   }
-  
+
+  async updateVideoDuration(userId, sessionDate, videoId, videoDuration) {
+    try {
+      const result = await this.collection.updateOne(
+        { userId: userId, date: sessionDate, "videos.id": videoId },
+        { $set: { "videos.$.duration": videoDuration } }
+      );
+      return result.modifiedCount > 0;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 const generateUniqueId = () => {
   const today = new Date();
+  const adjustedHours = today.getHours() + 2;
+  if (adjustedHours >= 24) {
+    today.setDate(today.getDate() + 1);
+  }
+  const hour = String(adjustedHours % 24).padStart(2, '0');
 
   const year = today.getFullYear().toString().slice(-2);
   const month = String(today.getMonth() + 1).padStart(2, '0');
   const day = String(today.getDate()).padStart(2, '0');
-  const hour = String(today.getHours()).padStart(2, '0');
   const minute = String(today.getMinutes()).padStart(2, '0');
   const second = String(today.getSeconds()).padStart(2, '0');
 
@@ -83,12 +98,10 @@ const createDirectory = (userDir, callback) => {
   callback(null, userDir);
 };
 
-const convertVideo = (userId, callback) => {
-  const userDir = path.join(__dirname, '..', 'uploads', 'user', userId);
+const convertVideo = (filePath, callback) => {
   const today = new Date();
-  const fileName = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}.mp4`;
-  const inputFilePath = path.join(userDir, 'video.webm');
-  const outputFilePath = path.join(userDir, fileName);
+  const inputFilePath = path.join(filePath, 'video.webm');
+  const outputFilePath = path.join(filePath, 'video.mp4');
 
   ffmpeg(inputFilePath)
     .outputOptions('-c:v libx264')
@@ -106,6 +119,7 @@ const convertVideo = (userId, callback) => {
     })
     .save(outputFilePath);
 };
+
 
 module.exports = {
   MongoDBUser,

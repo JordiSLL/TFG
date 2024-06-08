@@ -5,6 +5,9 @@ const mongoDBSession = new model.MongoDBUser();
 const modelPacient = require('../models/pacient.model');
 const mongoDBpacient = new modelPacient()
 const fs = require('fs');
+const ffprobePath = require('@ffprobe-installer/ffprobe').path;
+const ffmpeg = require('fluent-ffmpeg');
+ffmpeg.setFfprobePath(ffprobePath);
 
 const clientPath = path.join(__dirname, '..', 'client');
 
@@ -49,7 +52,7 @@ exports.renderSessionDashboard = async (req, res) => {
         if (session.error) {
             console.log('Error:', session.error);
             return res.redirect('/main');
-        }else{
+        } else {
             const userSessionVerif = session.userId === req.params.userId;
             if (!userSessionVerif) {
                 return res.redirect('/main');
@@ -123,7 +126,8 @@ exports.uploadVideo = (req, res) => {
 
         const video = {
             id: currentVideo,
-            path:videoDir
+            path: videoDir,
+            duration:0
         };
 
         if (!userId) {
@@ -131,8 +135,6 @@ exports.uploadVideo = (req, res) => {
         }
 
         const updateSuccess = await mongoDBSession.addVideoToSession(userId, currentSession, video);
-
-        
 
         createDirectory(videoDir);
         const filePath = path.join(videoDir, "video.webm");
@@ -146,13 +148,25 @@ exports.uploadVideo = (req, res) => {
             res.json({ message: 'Vídeo subido correctamente' });
         });
 
-        /*
-            model.convertVideo(userId, (err) => {
-              if (err) {
-                return res.status(500).json({ message: 'Error al convertir el archivo a MP4' });
-              }
-              res.json({ message: 'Vídeo subido y convertido correctamente a MP4' });
-            });*/
+        model.convertVideo(videoDir, (err) => {
+            if (err) {
+                return console.log('Error al convertir el archivo a MP4');
+            }
+            console.log('Vídeo subido y convertido correctamente a MP4');
+            ffmpeg.ffprobe(path.join(videoDir, "video.mp4"), (err, metadata) => {
+                if (err) {
+                    console.error('Error al obtener metadata del archivo:', err);
+                }
+                video.duration = metadata.format.duration;
+                mongoDBSession.updateVideoDuration(userId, currentSession, currentVideo, video.duration)
+                    .then(() => {
+                        console.error("Vídeo subido correctamente: Duració: " + video.duration);
+                    })
+                    .catch(err => {
+                        console.error('Error al actualizar la duración del video en la base de datos:', err);
+                    });
+            });
+        });
     });
 };
 
@@ -181,7 +195,7 @@ exports.createSession = async (req, res) => {
 exports.getprediction = async (req, res) => {
     const video = req.body;
     console.log(video.videoPath)
-    const predictionPath = path.join(video.videoPath,'predictions.json');
+    const predictionPath = path.join(video.videoPath, 'predictions.json');
     fs.readFile(predictionPath, 'utf8', (err, data) => {
         if (err) {
             console.error('Error al leer el archivo JSON:', err);
@@ -264,7 +278,13 @@ exports.getVideo = async (req, res) => {
             }
             const video = session.videos.find(video => video.id === req.params.videoId);
             //console.log(path.join(video.path, 'test.mkv'));
-            res.sendFile(path.join(video.path, 'video.mp4'));
+            try {
+                res.sendFile(path.join(video.path, 'video.mp4'));
+            }
+            catch (error) {
+                console.log("No existeix el arxiu de video.")
+                res.status(500).send({ message: "Error al trobar el video de la sessió del usuari" });
+            }
         }
     }
     //return res.status(500).send({ message: "Error al trobar el video de la sessió del usuari" });

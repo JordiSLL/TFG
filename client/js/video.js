@@ -160,32 +160,48 @@ stopButton.addEventListener('click', () => {
 });
 
 finishButton.addEventListener('click', () => {
-    // Crear una promesa que se resolverá cuando se dispare el evento 'stop'
-    const stopRecording = new Promise((resolve, reject) => {
-        mediaRecorder.addEventListener('stop', resolve);
-        mediaRecorder.addEventListener('error', reject);
-    });
+    console.log(mediaRecorder.state);
+    if (mediaRecorder.state === "recording" || mediaRecorder.state === "paused") {
+        // Crear una promesa que se resolverá cuando se dispare el evento 'stop'
+        const stopRecording = new Promise((resolve, reject) => {
+            mediaRecorder.addEventListener('stop', resolve, { once: true });
+            mediaRecorder.addEventListener('error', reject, { once: true });
+        });
 
-    mediaRecorder.stop();
+        mediaRecorder.stop();
 
-    // Esperamos a que se dispare el evento 'stop'
-    stopRecording.then(() => {
+        // Esperamos a que se dispare el evento 'stop'
+        stopRecording.then(() => {
+            videoStream.getTracks().forEach(track => track.stop());
+            videoElement.srcObject = null;
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            finishButton.disabled = true;
+            batchBtn.disabled = false;
+            uploadBtn.disabled = false;
+            videoBatchDiv.style.display = "none";
+            batchBtn.classList.remove("selected");
+            enableButtons();
+            sessionStorage.removeItem('currentSession');
+        }).catch(error => {
+            console.error('Error stopping the media recorder:', error);
+        });
+    } else if (mediaRecorder.state === "inactive") {
         videoStream.getTracks().forEach(track => track.stop());
         videoElement.srcObject = null;
         startButton.disabled = false;
         stopButton.disabled = true;
-        finishButton.disabled = false;
+        finishButton.disabled = true;
         batchBtn.disabled = false;
         uploadBtn.disabled = false;
-        finishButton.disabled = true;
         videoBatchDiv.style.display = "none";
         batchBtn.classList.remove("selected");
         enableButtons();
         sessionStorage.removeItem('currentSession');
-    }).catch(error => {
-        console.error('Error stopping the media recorder:', error);
-    });
+        console.log('MediaRecorder is inactive, actions performed directly.');
+    } 
 });
+
 
 // Función para manejar los datos disponibles durante la grabación
 function handleDataAvailable(event) {

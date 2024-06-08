@@ -223,7 +223,7 @@ function showResults(results) {
 
 function selectUser(userId, userName) {
     sessionStorage.setItem('selectedUserId', userId);
-    sessionStorage.setItem('selectedUserName', userName);
+    //sessionStorage.setItem('selectedUserName', userName);
     searchInput.value = userName;
     verificarSelectedUserId();
     searchResults.innerHTML = '';

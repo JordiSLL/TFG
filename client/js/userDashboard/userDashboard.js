@@ -80,19 +80,20 @@ async function fetchUser() {
 }
 
 function createSessionsDiv(sessions) {
+    sessions.sort((a, b) => b.date.localeCompare(a.date));
     sessions.forEach(session => {
         console.log(session)
 
         const dateString = session.date;
-        const year = dateString.slice(4, 6);
+        const day = dateString.slice(4, 6);
         const month = dateString.slice(2, 4);
-        const day = dateString.slice(0, 2);
+        const year = dateString.slice(0, 2);
         const hour = dateString.slice(6, 8);
         const minute = dateString.slice(8, 10);
         const second = dateString.slice(10);
 
         const dateHour = `${hour}:${minute}:${second}`;
-        const date = `${day}-${month}-${year}`;
+        const date = `${day}-${month}-20${year}`;
 
         var sesionDiv = document.createElement("div");
         sesionDiv.classList.add('sessionDiv');

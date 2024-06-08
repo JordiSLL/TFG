@@ -40,7 +40,7 @@ function getAvgEmotionsText(list1, list2) {
             const emotion2 = emotions2.find(e => e.name === emotion1.name);
             return {
                 name: emotion1.name,
-                score: (emotion1.score + emotion2.score) / 2
+                score: emotion2 ? (emotion1.score + emotion2.score) / 2 : emotion1.score
             };
         });
         
@@ -136,7 +136,7 @@ function updateChartsBasedOnButtons() {
     } else if (isFaceModelActive) {
         console.log("face");
         emotionList = listFace; 
-        emotionTextList = listMedia;
+        emotionTextList = listFraseMedia;
     } else {
         console.log("Ningun Model actiu");
         emotionList = listMedia; 
