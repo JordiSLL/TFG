@@ -7,12 +7,15 @@
     <title>Document</title>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/userDashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js" integrity="sha512-UXumZrZNiOwnTcZSHLOfcTs0aos2MzBWHXOHOuB0J/R44QB0dwY5JgfbvljXcklVf65Gc4El6RjZ+lnwd2az2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/2.0.1/chartjs-plugin-zoom.min.js"></script>
 </head>
 
 <body>
     <h1>FeelGuard Beta</h1>
     <h4>Aplicació de la intel·ligència artificial en l’anàlisi d’emocions i detecció d’indicis de depressió.</h4>
-    <h4>Code make by Jordi Sánchez</h4>
+    <h4>Code made by Jordi Sánchez</h4>
     <section class="container">
         <section class="header">
             <button id="main">Main</button>
@@ -53,25 +56,19 @@
             <div class="grid-container">
                 <div class="info1">
                     <h2>Información General</h2>
-                    <div>Número de sessions:<span id="sessionId">0</span></div>
-                    <div>Resultats: <span id="sessionData">0</span></div>
+                    <div>Número de sessions: <span id="numSession">0</span></div>
                 </div>
                 <div class="info2">
-                    <h2>Resultats Globals del Video</h2>
+                    <h2>Resultats Globals</h2>
                     <div></div>
-
                 </div>
                 <div class="chart1" colspan="2">
-                    <h2>Grafic Evolitu de les emocions</h2>
-                    <canvas id="chart"></canvas>
+                    <h2>Resultats Globals de l'Usuari</h2>
+                    <canvas id="chartGlobal"></canvas>
                 </div>
                 <div class="chart2" colspan="2">
-                    <h2>Grafic Evolitu de les emocions TEXT</h2>
+                    <h2>Grafic Evolitu de les emocions</h2>
                     <canvas id="chart"></canvas>
-                </div>
-                <div class="chart3" colspan="2">
-                    <h2>Grafic Evolitu de les emocions FACE</h2>
-                    <canvas id="chart2"></canvas>
                 </div>
                 <div class="calendari" id="calendari">
                     </divclass>
@@ -88,8 +85,9 @@
     <script src="/js/colorChart.js"></script>
     <script src="/js/init.js"></script>
     <script src="/js/main.js"></script>
-    <script src="/js/userDashboard/userDashboard.js"></script>
+    <script src="/js/userDashboard/createUserDashboard.js"></script>
     <script src="/js/userDashboard/calendar.js"></script>
+    <script src="/js/userDashboard/updateUserDashboard.js"></script>
 </body>
 
 </html>

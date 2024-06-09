@@ -178,7 +178,7 @@ function avgEmotionsVideo(list, modelNames) {
 
 function avgEmotionsSession(data, modelNames) {
     const emotions = {};
-
+    //console.log(data)
     modelNames.forEach(modelName => {
         data[modelName].forEach(emotion => {
             if (!emotions[emotion.name]) {
@@ -189,14 +189,14 @@ function avgEmotionsSession(data, modelNames) {
             }
         });
     });
-
+    //console.log(emotions)
     modelNames.forEach(modelName => {
         data[modelName].forEach(emotion => {
             emotions[emotion.name].count++;
             emotions[emotion.name].totalScore += emotion.score;
         });
     });
-
+    //console.log(emotions)
     const averagedEmotions = Object.keys(emotions).map(emotionName => {
         return {
             name: emotionName,

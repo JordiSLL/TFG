@@ -106,17 +106,18 @@
 }
 
 .info1 {
-  grid-column: span 1;
+  grid-column: span 2;
 }
 
 .info2 {
-  grid-column: span 1;
+  grid-column: span 2;
 }
 
-.chart1,
-.chart2,
-.chart3 {
-  grid-column: span 2;
+.chart1{
+  grid-column: span 1;
+}
+.chart2 {
+  grid-column: span 3;
 }
 .calendari{
   grid-column: span 4;
@@ -258,7 +259,7 @@
   color: #333; 
 }
 
-.analyzeBtn {
+.sessionBtn {
   background-color: #007bff; 
   color: #fff; 
   border: none; 
@@ -269,6 +270,21 @@
 
 }
 
-.analyzeBtn:hover {
+.sessionBtn:hover {
   background-color: #0056b3; 
+}
+
+.analyzeBtn {
+  background-color: #972cdf; 
+  color: #fff; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  transition: background-color 0.3s; 
+
+}
+
+.analyzeBtn:hover {
+  background-color: #7a25b3; 
 }
