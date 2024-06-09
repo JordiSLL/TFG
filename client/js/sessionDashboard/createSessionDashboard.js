@@ -36,7 +36,11 @@ function fetchsession(sessionId) {
         })
         .then(data => {
             sessionEmotions = data.session.emotion;
+            //console.log("sessionEmotions")
+            //console.log(sessionEmotions)
             videoEmotions = data.session.videos.map(video => video.emotion);
+            //console.log("videoEmotions")
+            //console.log(videoEmotions)
             createVideoDiv(data.session);
             createGlobalChart(data.session)
             createChartLine(data.session.videos);

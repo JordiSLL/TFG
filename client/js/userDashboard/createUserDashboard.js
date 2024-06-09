@@ -2,10 +2,11 @@ const sessionContainer = document.getElementById('sessionContainer');
 const errorMSJ = document.getElementById('errorDiv');
 const sessionsContainer = document.getElementById('sessions');
 const numSessions = document.getElementById('numSession');
+var sessionEmotions = [];
 
 document.addEventListener('DOMContentLoaded', async function () {
     const { userId } = getUrlParams();
-    console.log(userId)
+    //console.log(userId)
     if (userId) {
         const a = await fetchUser();
         //console.log(a)
@@ -38,7 +39,7 @@ function fetchsession(userId) {
             return response.json();
         })
         .then(data => {
-            console.log(data);
+            //console.log(data);
             if (!Array.isArray(data.sessions) || data.sessions.length === 0) {
                 sessionContainer.style.display = 'none';
                 sessionContainer.classList.remove('show');
@@ -46,12 +47,14 @@ function fetchsession(userId) {
                 errorMSJ.offsetHeight;
                 errorMSJ.classList.add('show');
             } else {
-                console.log(data);
+                //console.log(data);
                 errorMSJ.style.display = 'none';
                 errorMSJ.classList.remove('show');
                 createSessionsDiv(data.sessions);
                 createGlobalChart(data.sessions);
                 createLineChart(data.sessions);
+                sessionEmotions = data.sessions.map(session => session.emotion);
+                console.log(sessionEmotions)
                 numSessions.textContent = data.sessions.length;
                 sessionContainer.style.display = 'block';
                 sessionContainer.offsetHeight;
@@ -87,7 +90,7 @@ function createSessionsDiv(sessions) {
     //sessions.sort((a, b) => b.date.localeCompare(a.date));
     for (let index = sessions.length - 1; index >= 0; index--) {
         const session = sessions[index];
-        console.log(session);
+        //console.log(session);
 
         const dateString = session.date;
         const day = dateString.slice(4, 6);
@@ -107,7 +110,7 @@ function createSessionsDiv(sessions) {
         textDiv.classList.add('textDiv');
 
         var stateTextElement = document.createElement('p');
-        stateTextElement.innerHTML = "<strong>Número de la Sessió: </strong>"+ (index+1);
+        stateTextElement.innerHTML = "<strong>Número de la Sessió: </strong>" + (index + 1);
         textDiv.appendChild(stateTextElement);
 
         var dateTextElement = document.createElement('p');
@@ -124,14 +127,14 @@ function createSessionsDiv(sessions) {
 
         var stateTextElement = document.createElement('p');
         var stateTextElement = document.createElement('p');
-        stateTextElement.innerHTML = "<strong>Estat de la sessió: </strong>" + 
+        stateTextElement.innerHTML = "<strong>Estat de la sessió: </strong>" +
             (session.IdEstado === 1 ? "Sessió pendent de processar" :
-             session.IdEstado === 2 ? "Sessió pendent de recepció de dades" :
-             session.IdEstado === 3 ? "Error en el procesament de la Sessió" :
-             "Sessió Analitzada");
+                session.IdEstado === 2 ? "Sessió pendent de recepció de dades" :
+                    session.IdEstado === 3 ? "Error en el procesament de la Sessió" :
+                        "Sessió Analitzada");
         textDiv.appendChild(stateTextElement);
         sesionDiv.appendChild(textDiv);
-        
+
         if (session.IdEstado == 1 /* || session.IdEstado === undefined */) {
             var analyzeBtn = document.createElement("button");
             analyzeBtn.classList.add('analyzeBtn');
@@ -185,7 +188,7 @@ function navigateSession() {
             return window.location.href = `/Dashboard/${userId}/${sessionId}`;
         })
         .then(data => {
-            console.log(data);
+            //console.log(data);
         })
         .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
@@ -204,20 +207,20 @@ function getUrlParams() {
 }
 
 function analyzeSession() {
-    console.log(this.dataset.sessionId);
+    //console.log(this.dataset.sessionId);
 }
 
 function createGlobalChart(sessions) {
     var chartCanvas = document.getElementById("chartGlobal");
-    console.log(sessions)
-    emotions = avgEmotionsSession(sessions, ['Face', 'Language','Prosody'])
+    //console.log(sessions)
+    emotions = avgEmotionsSession(sessions, ['Face', 'Language', 'Prosody'])
     createChart(emotions, chartCanvas);
     var chart = Chart.getChart(chartCanvas)
     chart.options.plugins.legend.position = 'bottom';
     chart.update();
 }
 
-function createLineChart(sessions){
+function createLineChart(sessions) {
     var firstEmotionScores = [];
     var avgEmotions = [];
     const filteredData = sessions.filter(session => session.IdEstado === 0);
@@ -226,12 +229,17 @@ function createLineChart(sessions){
         avgEmotions.push(emotions)
         firstEmotionScores.push(emotions[0])
     })
-    console.log(firstEmotionScores)
+    //console.log(firstEmotionScores)
     const sessionObject = {};
-    
-    for (let i = 1; i <= filteredData.length; i++) {
-        sessionObject[i] = 0.5;
+    //console.log("total: "+sessions.length)
+
+    for (let index = sessions.length - 1; index >= 0; index--) {
+        const session = sessions[index];
+        if (session.IdEstado == 0) {
+            sessionObject[index+1] = 0.5;
+        }
     }
+
     const chartData = {
         labels: Object.keys(sessionObject),
         datasets: []
@@ -258,8 +266,8 @@ function createLineChart(sessions){
         });
     });
     chartData.datasets = Object.values(emotionMap);
-    console.log("chartData.datasets")
-    console.log(chartData.datasets)
+    //console.log("chartData.datasets")
+    //console.log(chartData.datasets)
     const config = {
         type: 'line',
         data: chartData,
@@ -435,7 +443,7 @@ function createChart(emotions, chartCanvas) {
 function avgEmotionsSession(data, modelNames) {
     const emotions = {};
 
-    const filteredData = data.filter(session => session.IdEstado === 0);
+    const filteredData = data.filter(session => session ===undefined || session.IdEstado === 0);
 
     modelNames.forEach(modelName => {
         filteredData.forEach(session => {

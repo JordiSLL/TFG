@@ -65,7 +65,9 @@
   border: 1px solid  #007bff ; 
 }
 .modelButtons {
+  grid-column: span 4;
   display: flex;
+  justify-content: flex-end;
 }
 
 .modelButton {
@@ -196,6 +198,7 @@
 .legend {
   padding: 10px;
   grid-column: span 4;
+  margin-bottom: 20px;
 }
 
 .legend-item {
