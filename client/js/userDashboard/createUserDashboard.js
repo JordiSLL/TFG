@@ -39,7 +39,7 @@ function fetchsession(userId) {
             return response.json();
         })
         .then(data => {
-            //console.log(data);
+            console.log(data);
             if (!Array.isArray(data.sessions) || data.sessions.length === 0) {
                 sessionContainer.style.display = 'none';
                 sessionContainer.classList.remove('show');
@@ -50,6 +50,7 @@ function fetchsession(userId) {
                 //console.log(data);
                 errorMSJ.style.display = 'none';
                 errorMSJ.classList.remove('show');
+                createCalendar(data.sessions)
                 createSessionsDiv(data.sessions);
                 createGlobalChart(data.sessions);
                 createLineChart(data.sessions);
