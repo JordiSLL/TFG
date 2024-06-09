@@ -6,7 +6,7 @@ const sessionHour = document.getElementById("sessionHour");
 const videosNumber = document.getElementById("videosNumber");
 backButton.addEventListener("click", returnUserSession);
 
-const sessionEmotions = [];
+var sessionEmotions = [];
 var videoEmotions = [];
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -35,7 +35,7 @@ function fetchsession(sessionId) {
             return response.json();
         })
         .then(data => {
-            sessionEmotions.push(data.session.emotion)
+            sessionEmotions = data.session.emotion;
             videoEmotions = data.session.videos.map(video => video.emotion);
             createVideoDiv(data.session);
             createGlobalChart(data.session)
@@ -154,7 +154,8 @@ function createChartLine(videos) {
         });
     });
     chartData.datasets = Object.values(emotionMap);
-
+    console.log("chartData.datasets")
+    console.log(chartData.datasets)
     const config = {
         type: 'line',
         data: chartData,

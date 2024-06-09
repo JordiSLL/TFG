@@ -29,50 +29,55 @@ function toggleButton(buttonId) {
 function updateChartsBasedOnButtons() {
     let emotionListVideo;
     let emotionListGlobal;
+
     if (isSpeechModelActive && isLanguageModelActive && isFaceModelActive) {
         console.log("Tots els models actius");
-        emotionListVideo = groupAndAverageEmotions(videoEmotions, ['Face', 'Prosody', 'Language']);
+        emotionListGlobal = avgEmotionsSession(sessionEmotions, ['Face', 'Prosody', 'Language']);
+        emotionListVideo = avgEmotionsVideo(videoEmotions, ['Face', 'Prosody', 'Language']);
     } else if (isSpeechModelActive && isLanguageModelActive) {
         console.log("Speech i language");
-        emotionListVideo = groupAndAverageEmotions(videoEmotions, ['Language', 'Prosody']);
+        emotionListGlobal = avgEmotionsSession(sessionEmotions, ['Language', 'Prosody']);
+        emotionListVideo = avgEmotionsVideo(videoEmotions, ['Language', 'Prosody']);
     } else if (isSpeechModelActive && isFaceModelActive) {
         console.log("Speech i face");
-        emotionListVideo = groupAndAverageEmotions(videoEmotions, ['Face', 'Prosody']);
+        emotionListGlobal = avgEmotionsSession(sessionEmotions, ['Face', 'Prosody']);
+        emotionListVideo = avgEmotionsVideo(videoEmotions, ['Face', 'Prosody']);
     } else if (isLanguageModelActive && isFaceModelActive) {
         console.log("Language i face");
-        emotionListVideo = groupAndAverageEmotions(videoEmotions, ['Language', 'Face']);
+        emotionListGlobal = avgEmotionsSession(sessionEmotions, ['Language', 'Face']);
+        emotionListVideo = avgEmotionsVideo(videoEmotions, ['Language', 'Face']);
     } else if (isSpeechModelActive) {
         console.log("speech");
+        emotionListGlobal = sessionEmotions['Prosody'];
         emotionListVideo = getModelLists(videoEmotions, 'Prosody');
     } else if (isLanguageModelActive) {
         console.log("language");
+        emotionListGlobal = sessionEmotions['Language']; 
         emotionListVideo = getModelLists(videoEmotions, 'Language'); 
     } else if (isFaceModelActive) {
         console.log("face");
+        emotionListGlobal = sessionEmotions['Face']; 
         emotionListVideo = getModelLists(videoEmotions, 'Face'); 
     } else {
         console.log("Ningun Model actiu");
-        emotionListVideo = groupAndAverageEmotions(videoEmotions, ['Face', 'Prosody', 'Language']);
+        emotionListGlobal = avgEmotionsSession(sessionEmotions, ['Face', 'Prosody', 'Language']);
+        emotionListVideo = avgEmotionsVideo(videoEmotions, ['Face', 'Prosody', 'Language']);
     }
-    
+    console.log(emotionListVideo)
     updateChartsText(emotionListVideo);
-    
-    
-    //const chartCanvas = document.getElementById("chartGlobal");
-    //const chart = Chart.getChart(chartCanvas); 
-    
-    //updateChart(chart,{ emotions: emotionList });
-    console.log("emotionList")
-    console.log(emotionList)
+    const chartCanvas = document.getElementById("chartGlobal");
+    const chart = Chart.getChart(chartCanvas); 
+    updateChart(chart,{ emotions: emotionListGlobal });
+    updateChartLine(emotionListVideo);
 }
-//sessionEmotions videoEmotions
+
 function getModelLists(list, modelName) {
     return list.map(emotion => emotion[modelName]);
 }
 
 function updateChartsText(emotionList) {
     emotionList.forEach((data, index) => {
-        console.log(data)
+       // console.log(data)
         const chartCanvas = document.getElementById(`chart-doughnut${index}`);
         if (chartCanvas) {
             const chart = Chart.getChart(chartCanvas); 
@@ -84,14 +89,12 @@ function updateChartsText(emotionList) {
 }
 
 function updateChart(chart, data) {
-    console.log(data)
+    //console.log(data)
     const top5Emotions = data.emotions.slice(0, 5).map(emotion => emotion.name);
     const top5EmotionsScores = data.emotions.slice(0, 5).map(emotion => emotion.score);
-    console.log(top5Emotions)
-
+    //console.log(top5Emotions)
     const backgroundColors = top5Emotions.map(emotion => emotionColors[emotion] || 'rgba(0, 0, 0, 0.5)');
     const borderColors = top5Emotions.map(emotion => emotionBorderColors[emotion] || 'rgba(0, 0, 0, 1)');
-
     chart.data.labels = top5Emotions;
     chart.data.datasets[0].data = top5EmotionsScores;
     chart.data.datasets[0].backgroundColor = backgroundColors;
@@ -99,7 +102,51 @@ function updateChart(chart, data) {
     chart.update();
 }
 
-function groupAndAverageEmotions(list, modelNames) {
+function updateChartLine(emotions){
+    const chartCanvas = document.getElementById("chart");
+    const chart = Chart.getChart(chartCanvas); 
+    var firstEmotionScores = [];
+    emotions.forEach((video,index) => {
+        firstEmotionScores.push(emotions[index][0])
+    })
+    console.log("firstEmotionScores")
+    console.log(firstEmotionScores)
+    const videoObject = {};
+
+    for (let i = 1; i <= emotions.length; i++) {
+        videoObject[i] = 0.5;
+    }
+    const chartData = {
+        labels: Object.keys(videoObject),
+        datasets: []
+    };
+
+    const emotionMap = {};
+    emotions.forEach((emotionArray, videoIndex) => {
+        emotionArray.forEach(emotion => {
+            if (firstEmotionScores.map(e => e.name).includes(emotion.name)) {
+                if (!emotionMap[emotion.name]) {
+                    emotionMap[emotion.name] = {
+                        label: emotion.name,
+                        data: Array(videos.length).fill(0),
+                        borderColor: emotionBorderColors[emotion.name] || 'rgba(0, 0, 0, 1)',
+                        backgroundColor: emotionColors[emotion.name] || 'rgba(0, 0, 0, 0.5)',
+                        fill: false,
+                        tension: 0.1,
+                        pointRadius: 0,
+                        pointHoverRadius: 0
+                    };
+                }
+                emotionMap[emotion.name].data[videoIndex] = emotion.score;
+            }
+        });
+    });
+    chartData.datasets = Object.values(emotionMap);
+    chart.data = chartData;
+    chart.update();
+}
+
+function avgEmotionsVideo(list, modelNames) {
     return list.map(video => {
         const emotionSums = {};
         const emotionCounts = {};
@@ -127,4 +174,35 @@ function groupAndAverageEmotions(list, modelNames) {
 
         return averagedEmotions.sort((a, b) => b.score - a.score);
     });
+}
+
+function avgEmotionsSession(data, modelNames) {
+    const emotions = {};
+
+    modelNames.forEach(modelName => {
+        data[modelName].forEach(emotion => {
+            if (!emotions[emotion.name]) {
+                emotions[emotion.name] = {
+                    count: 0,
+                    totalScore: 0
+                };
+            }
+        });
+    });
+
+    modelNames.forEach(modelName => {
+        data[modelName].forEach(emotion => {
+            emotions[emotion.name].count++;
+            emotions[emotion.name].totalScore += emotion.score;
+        });
+    });
+
+    const averagedEmotions = Object.keys(emotions).map(emotionName => {
+        return {
+            name: emotionName,
+            score: emotions[emotionName].totalScore / emotions[emotionName].count
+        };
+    });
+
+    return averagedEmotions.sort((a, b) => b.score - a.score);
 }
