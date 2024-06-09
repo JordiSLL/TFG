@@ -208,6 +208,7 @@ function createFaceChart(models) {
                         pointHoverRadius: 0,      
                         hidden: !topEmotions.slice(0, 5).includes(emotion.name)
                     };
+                    console.log(dataset)
                     chartData.datasets.push(dataset);
                 }
             }

@@ -22,14 +22,19 @@
         </div>
         <div class="grid-container">
             <div class="info1">
-                <h2>Información General</h2>
+                <h2>Informació General</h2>
                 <div>Sesión ID: <span id="sessionId">0</span></div>
                 <div>Data de la Sessió: <span id="sessionData">0</span></div>
                 <div>Hora de la Sessió: <span id="sessionHour">0</span></div>
                 <div>Numero de videos: <span id="videosNumber">0</span></div>
             </div>
             <div class="info2">
+                <h2>Informació dels Models</h2>
+                
+            </div>
+            <div class="info3">
                 <h2>Resultats Globals del Video</h2>
+                <canvas id="chartGlobal"></canvas>
                 <div></div>
                 
             </div>
@@ -37,19 +42,12 @@
                 <h2>Grafic Evolitu de les emocions</h2>
                 <canvas id="chart"></canvas>
             </div>
-            <div class="chart2" colspan="2">
-                <h2>Grafic Evolitu de les emocions TEXT</h2>
-                <canvas id="chart2"></canvas>
-            </div>
-            <div class="chart3" colspan="2">
-                <h2>Grafic Evolitu de les emocions FACE</h2>
-                <canvas id="chart2"></canvas>
-            </div>
             <section class="videos" id="videos">
             </section>
         </div>
     </div>
     <script src="/js/colorChart.js"></script>
-    <script src="/js/sessionDashboard/sessionDashboard.js"></script>
+    <script src="/js/sessionDashboard/createSessionDashboard.js"></script>
+    <script src="/js/sessionDashboard/updateSessionDashboard.js"></script>
 </body>
 </html>

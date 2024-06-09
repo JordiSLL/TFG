@@ -21,5 +21,6 @@ router.post('/createSession', auth.checkAuth, controller.createSession);
 router.post('/getSessionsByUserID', auth.checkAuth, controller.getSessionsByUserID);
 router.post('/getSessionByID', auth.checkAuth, controller.getSessionByID);
 router.post('/getVideoPrediction',auth.checkAuth,controller.getprediction);
+router.post('/procesVideos',auth.checkAuth,controller.processVideoHumeAi);
 
 module.exports = router;

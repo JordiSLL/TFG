@@ -127,7 +127,8 @@ exports.uploadVideo = (req, res) => {
         const video = {
             id: currentVideo,
             path: videoDir,
-            duration:0
+            duration:0,
+            job_id:0
         };
 
         if (!userId) {
@@ -288,4 +289,11 @@ exports.getVideo = async (req, res) => {
         }
     }
     //return res.status(500).send({ message: "Error al trobar el video de la sessió del usuari" });
+}
+
+exports.processVideoHumeAi = async (req, res) => {
+    //session + user
+    // get al video
+    //foreach send HumeAi
+    //update if send OK job_id else 1
 }

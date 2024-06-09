@@ -84,14 +84,20 @@ button {
 }
 
 .info1 {
-    grid-column: span 1;
+    grid-column: span 2;
+    padding-bottom: 40px;
 }
 
 .info2 {
+    grid-column: span 2;
+    padding-bottom: 20px;
+}
+.info3{
     grid-column: span 1;
 }
-
-.chart1,
+.chart1{
+    grid-column: span 3;
+}
 .chart2,
 .chart3 {
     grid-column: span 2;
