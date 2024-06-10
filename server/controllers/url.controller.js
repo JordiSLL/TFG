@@ -295,16 +295,33 @@ exports.getVideo = async (req, res) => {
 
 exports.processVideoHumeAi = async (req, res) => {
     try {
-        const session = await mongoDBSession.findSessionById(req.body.sessionId);
+        var session = await mongoDBSession.findSessionById(req.body.sessionId);
         console.log(session);
 
-        for (const video of session.videos) {
+       /* for (const video of session.videos) {
+            if(video.job_id == 0 || video.job_id == -1){
             const jobId = await sendVideoToAPI(path.join(video.path,"video.mp4"));
             const result = await mongoDBSession.updateJobId(req.body.userId, req.body.sessionId, video.id, jobId);
             console.log(result);
+            }
+        }*/
+        session = await mongoDBSession.findSessionById(req.body.sessionId);
+        let hasError = false;
+        let errorCount = 0;
+        for (const video of session.videos) {
+            if (video.job_id === -1) {
+                hasError = true;
+                errorCount++;
+            }
         }
-
-        res.status(200).send({ message: "Videos sent to API successfully" });
+        if (hasError) {
+            return res.status(500).send({ message: `Torna a processar la sessió. Videos no processats: ${errorCount}`});
+        } else {
+            res.status(200).send({ message: "Videos sent to API successfully" });
+        }
+        //verificar que ningun job_id es -1 ni 0
+        //si alguno esta mensaje error, vuelva a probar de procer N videos no procesados
+        //cambiar estado a 2
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: "An error occurred while sending videos to API" });
@@ -314,10 +331,7 @@ exports.processVideoHumeAi = async (req, res) => {
 exports.getJobVideoHumeAi = async (req, res ) => {
     console.log(req.body.userId)
     console.log(req.body.sessionId)
-    //session + user DONE
-    // get all video DONE
-    //foreach send HumeAi
-    //update if send OK job_id else 1
+    
     const session = await mongoDBSession.findSessionById(req.body.sessionId);
 
     const response = await getJsonAPI("d4a1b4e2-0b6f-499c-914b-ccf13ba1ad62");

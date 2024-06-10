@@ -291,3 +291,18 @@
 .analyzeBtn:hover {
   background-color: #7a25b3; 
 }
+
+.getPredictionBtn {
+  background-color: #e49228; 
+  color: #fff; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  transition: background-color 0.3s; 
+
+}
+
+.getPredictionBtn:hover {
+  background-color: #c77e1f; 
+}

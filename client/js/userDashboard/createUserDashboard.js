@@ -113,7 +113,7 @@ function createSessionsDiv(sessions) {
         var numTextElement = document.createElement('p');
         numTextElement.innerHTML = "<strong>Número de la Sessió: </strong>" + (index + 1);
         textDiv.appendChild(numTextElement);
-    
+
         var idTextElement = document.createElement('p');
         idTextElement.innerHTML = "<strong>ID de la Sessió: </strong>" + (session._id);
         textDiv.appendChild(idTextElement);
@@ -131,7 +131,7 @@ function createSessionsDiv(sessions) {
         textDiv.appendChild(countVideosTextElement);
 
         var stateTextElement = document.createElement('p');
-        var stateTextElement = document.createElement('p');
+        stateTextElement.id = 'textState'+index;
         stateTextElement.innerHTML = "<strong>Estat de la sessió: </strong>" +
             (session.IdEstado === 1 ? "Sessió pendent de processar" :
                 session.IdEstado === 2 ? "Sessió pendent de recepció de dades" :
@@ -142,6 +142,7 @@ function createSessionsDiv(sessions) {
 
         if (session.IdEstado == 1 /* || session.IdEstado === undefined */) {
             var analyzeBtn = document.createElement("button");
+            analyzeBtn.id = "btn" + index;
             analyzeBtn.classList.add('analyzeBtn');
             analyzeBtn.dataset.sessionId = session._id;
             analyzeBtn.textContent = "Analitzar Sessió";
@@ -159,6 +160,7 @@ function createSessionsDiv(sessions) {
             sesionDiv.appendChild(chartDiv);
 
             var sessionBtn = document.createElement("button");
+            sessionBtn.id = "btn" + index;
             sessionBtn.classList.add('sessionBtn');
             sessionBtn.dataset.sessionId = session._id;
             sessionBtn.textContent = "Anar a la Sessió";
@@ -214,6 +216,9 @@ function getUrlParams() {
 async function analyzeSession() {
     //console.log(this.dataset.sessionId);
     const sessionId = this.dataset.sessionId;
+    console.log(this)
+    const buttonElement = this;
+
     var { userId } = getUrlParams();
     if (!userId) {
         userId = sessionStorage.getItem('selectedUserId');
@@ -222,15 +227,24 @@ async function analyzeSession() {
     try {
         const response = await fetch('/procesVideos', {
             method: 'POST',
-            body: JSON.stringify({ userId: userId, sessionId:sessionId }),
+            body: JSON.stringify({ userId: userId, sessionId: sessionId }),
             headers: { 'Content-Type': 'application/json' }
         });
+        
+        const responseData = await response.json();
 
+        console.log(responseData)
+        const textStateElement = document.getElementById('textState'+this.id.replace('btn', ''));
         if (!response.ok) {
+            textStateElement.innerHTML = "<strong>Estat de la sessió: </strong>" + responseData.message;
             throw new Error('Network response was not ok');
+        } else if (response.status === 200) {
+            buttonElement.classList.remove('analyzeBtn');
+            buttonElement.classList.add('getPredictionBtn');
+            buttonElement.textContent = "Obtenir Prediccions"
+            textStateElement.innerHTML = "<strong>Estat de la sessió: </strong>" + "Sessió pendent de recepció de dades";
         }
-        const data = await response.json();
-       console.log(data)
+        
     } catch (error) {
         console.error('Fetch error:', error);
         return '';
@@ -263,7 +277,7 @@ function createLineChart(sessions) {
     for (let index = sessions.length - 1; index >= 0; index--) {
         const session = sessions[index];
         if (session.IdEstado == 0) {
-            sessionObject[index+1] = 0.5;
+            sessionObject[index + 1] = 0.5;
         }
     }
 
@@ -470,7 +484,7 @@ function createChart(emotions, chartCanvas) {
 function avgEmotionsSession(data, modelNames) {
     const emotions = {};
 
-    const filteredData = data.filter(session => session ===undefined || session.IdEstado === 0);
+    const filteredData = data.filter(session => session === undefined || session.IdEstado === 0);
 
     modelNames.forEach(modelName => {
         filteredData.forEach(session => {
