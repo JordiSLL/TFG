@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm install && node",
-    "start-dev": "npm install && nodemon --legacy-watch"
+    "start": "npm install && node server.js",
+    "start-dev": "npm install && nodemon --legacy-watch --ignore '*.json'"
   },
   "author": "Jordi Sánchez",
   "license": "ISC",
@@ -26,7 +26,6 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.5.0",
     "multer": "^1.4.5-lts.1",
-    "node-fetch": "^2.7.0",
-    "nodemon": "^3.1.0"
+    "node-fetch": "^2.7.0"
   }
 }

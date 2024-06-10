@@ -10,7 +10,8 @@ services:
     build: 
       context: ./server
       args:
-        NODE_ENV: development
+        #NODE_ENV: development
+        NODE_ENV: production
     ports:
       - "3000:3000"
     volumes:
@@ -18,4 +19,5 @@ services:
       - ./client:/app/client
     depends_on:
       - mongodb
+    #command: [ "npm", "run", "start" ]
     command: [ "npm", "run", "start-dev" ]

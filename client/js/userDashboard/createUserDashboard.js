@@ -110,9 +110,13 @@ function createSessionsDiv(sessions) {
         var textDiv = document.createElement("div");
         textDiv.classList.add('textDiv');
 
-        var stateTextElement = document.createElement('p');
-        stateTextElement.innerHTML = "<strong>Número de la Sessió: </strong>" + (index + 1);
-        textDiv.appendChild(stateTextElement);
+        var numTextElement = document.createElement('p');
+        numTextElement.innerHTML = "<strong>Número de la Sessió: </strong>" + (index + 1);
+        textDiv.appendChild(numTextElement);
+    
+        var idTextElement = document.createElement('p');
+        idTextElement.innerHTML = "<strong>ID de la Sessió: </strong>" + (session._id);
+        textDiv.appendChild(idTextElement);
 
         var dateTextElement = document.createElement('p');
         dateTextElement.innerHTML = "<strong>Data de la Sessió:</strong> " + date;
@@ -207,8 +211,30 @@ function getUrlParams() {
     return { userId, sessionId, videoId };
 }
 
-function analyzeSession() {
+async function analyzeSession() {
     //console.log(this.dataset.sessionId);
+    const sessionId = this.dataset.sessionId;
+    var { userId } = getUrlParams();
+    if (!userId) {
+        userId = sessionStorage.getItem('selectedUserId');
+    }
+    console.log(sessionId)
+    try {
+        const response = await fetch('/procesVideos', {
+            method: 'POST',
+            body: JSON.stringify({ userId: userId, sessionId:sessionId }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+       console.log(data)
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return '';
+    }
 }
 
 function createGlobalChart(sessions) {

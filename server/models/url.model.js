@@ -2,6 +2,7 @@ const mongoClient = require('../services/mongodb.service');
 var mongo = require('mongodb');
 const path = require('path');
 const fs = require('fs');
+const fsp = require('fs').promises;
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const { ObjectId } = require('mongodb');
@@ -70,6 +71,47 @@ class MongoDBUser {
       throw error;
     }
   }
+
+  async updateJobId(userId, sessionId, videoId, JobId) {
+    try {
+      const objectId = new ObjectId(sessionId);
+      const result = await this.collection.updateOne(
+        { userId: userId, _id: objectId, "videos.id": videoId },
+        { $set: { "videos.$.job_id": JobId } }
+      );
+      return result.modifiedCount > 0;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateVideoEmotion(userId, sessionId, videoId, emotions) {
+    try {
+        // Espera a que la promesa emotions se resuelva
+        const data = await emotions;
+
+        if (!ObjectId.isValid(sessionId)) {
+            return { error: 'Invalid sessionId format' };
+        }
+
+        const objectId = new ObjectId(sessionId);
+        const result = await this.collection.updateOne(
+            { userId: userId, _id: objectId, "videos.id": videoId },
+            { 
+                $set: {
+                    "videos.$.emotion.Face": data.listFace,
+                    "videos.$.emotion.Language": data.listLanguage,
+                    "videos.$.emotion.Prosody": data.listProsody
+                } 
+            }
+        );
+
+        console.log("Modified count:", result.modifiedCount);
+        return result.modifiedCount > 0;
+    } catch (error) {
+        throw error;
+    }
+}
 }
 
 const generateUniqueId = () => {
@@ -120,10 +162,37 @@ const convertVideo = (filePath, callback) => {
     .save(outputFilePath);
 };
 
+const saveJsonToFile = async (jsonData, directoryPath) => {
+  try {
+      console.log(jsonData);
+
+      if (!await fsp.access(directoryPath).catch(() => true)) {
+          await fsp.mkdir(directoryPath, { recursive: true });
+      }
+      
+      const filePath = path.join(directoryPath, 'predictions.json');
+      const jsonString = JSON.stringify(jsonData, null, 2);
+      
+      await fsp.writeFile(filePath, jsonString, 'utf8');
+      console.log('File has been saved');
+      return true;
+  } catch (err) {
+      console.log('Error writing file', err);
+      return false;
+  }
+};
+
+const searchAllVideos = (userId, sessionId) => {
+  console.log(userId)
+  console.log(sessionId)
+
+};
 
 module.exports = {
   MongoDBUser,
   createDirectory,
   convertVideo,
-  generateUniqueId
+  generateUniqueId,
+  saveJsonToFile,
+  searchAllVideos
 };

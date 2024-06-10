@@ -4,6 +4,8 @@ const model = require('../models/url.model');
 const mongoDBSession = new model.MongoDBUser();
 const modelPacient = require('../models/pacient.model');
 const mongoDBpacient = new modelPacient()
+const { sendVideoToAPI, getJsonAPI } = require('../services/humeai.service');
+const { analyzeJsonVideo } = require('../services/analyze.service');
 const fs = require('fs');
 const ffprobePath = require('@ffprobe-installer/ffprobe').path;
 const ffmpeg = require('fluent-ffmpeg');
@@ -127,8 +129,8 @@ exports.uploadVideo = (req, res) => {
         const video = {
             id: currentVideo,
             path: videoDir,
-            duration:0,
-            job_id:0
+            duration: 0,
+            job_id: 0
         };
 
         if (!userId) {
@@ -292,8 +294,56 @@ exports.getVideo = async (req, res) => {
 }
 
 exports.processVideoHumeAi = async (req, res) => {
-    //session + user
-    // get al video
+    try {
+        const session = await mongoDBSession.findSessionById(req.body.sessionId);
+        console.log(session);
+
+        for (const video of session.videos) {
+            const jobId = await sendVideoToAPI(path.join(video.path,"video.mp4"));
+            const result = await mongoDBSession.updateJobId(req.body.userId, req.body.sessionId, video.id, jobId);
+            console.log(result);
+        }
+
+        res.status(200).send({ message: "Videos sent to API successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "An error occurred while sending videos to API" });
+    }
+};
+
+exports.getJobVideoHumeAi = async (req, res ) => {
+    console.log(req.body.userId)
+    console.log(req.body.sessionId)
+    //session + user DONE
+    // get all video DONE
     //foreach send HumeAi
     //update if send OK job_id else 1
+    const session = await mongoDBSession.findSessionById(req.body.sessionId);
+
+    const response = await getJsonAPI("d4a1b4e2-0b6f-499c-914b-ccf13ba1ad62");
+    if (response) {
+        const isSaved = await model.saveJsonToFile(response, "/app/uploads/user/662fb495bb616992a6d24101/session/240609120135/videos/240609120147");
+        console.log(isSaved)
+        if (isSaved) {
+            console.log('File saved successfully.');
+            const emotions = analyzeJsonVideo(response);
+            console.log(emotions)
+            if (emotions) {
+                const result = await mongoDBSession.updateVideoEmotion(req.body.userId,req.body.sessionId,"240609120147",emotions);
+                console.log("result: "+result)
+                if(result){
+                    console.log("Helloo")
+                    res.status(200).send({ message: "Correct" });
+                }
+            } else {
+                console.log('An error occurred while processing the emotions.');
+                return res.status(500).send({ message: "Error al processar les emocions del JSON" });
+            }
+        } else {
+            console.log('An error occurred while saving the file.');
+            return res.status(500).send({ message: "Error al guardar el JSON" });
+        }
+    } else {
+        return res.status(500).send({ message: "Error en la petició del JOB" });
+    }
 }
