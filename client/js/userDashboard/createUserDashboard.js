@@ -306,7 +306,7 @@ function createGlobalChart(sessions) {
 function createLineChart(sessions) {
     var firstEmotionScores = [];
     var avgEmotions = [];
-    const filteredData = sessions.filter(session => session.IdEstado === 0);
+    const filteredData = sessions.filter(session => session.IdEstado === 0 || session.IdEstado === 4);
     filteredData.forEach(session => {
         emotions = getAvgEmotions(session.emotion.Language, session.emotion.Prosody, session.emotion.Face);
         avgEmotions.push(emotions)
@@ -318,7 +318,7 @@ function createLineChart(sessions) {
 
     for (let index = sessions.length - 1; index >= 0; index--) {
         const session = sessions[index];
-        if (session.IdEstado == 0) {
+        if (session.IdEstado == 0 || session.IdEstado == 4) {
             sessionObject[index + 1] = 0.5;
         }
     }
