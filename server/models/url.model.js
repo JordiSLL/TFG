@@ -125,10 +125,11 @@ class MongoDBUser {
     }
   }
 
-  async updateSessionEmotion(userId, sessionId, videoId, emotions) {
+  async updateSessionEmotion(userId, sessionId, emotions) {
     try {
       const data = await emotions;
-
+      console.log("data")
+      console.log(data)
       if (!ObjectId.isValid(sessionId)) {
         return { error: 'Invalid sessionId format' };
       }

@@ -5,7 +5,7 @@ const mongoDBSession = new model.MongoDBUser();
 const modelPacient = require('../models/pacient.model');
 const mongoDBpacient = new modelPacient()
 const { sendVideoToAPI, getJsonAPI, getJobDetail } = require('../services/humeai.service');
-const { analyzeJsonVideo,analyzeJsonSession } = require('../services/analyze.service');
+const { analyzeJsonVideo, analyzeJsonSession } = require('../services/analyze.service');
 const fs = require('fs');
 const ffprobePath = require('@ffprobe-installer/ffprobe').path;
 const ffmpeg = require('fluent-ffmpeg');
@@ -371,17 +371,17 @@ exports.getJobVideoHumeAi = async (req, res) => {
             return res.status(500).send({ message: "Error en la petició del JOB" });
         }
     }
-
-    const emotions =  analyzeJsonSession(session);
-    if(emotions){
+    const sessionWithEmotions = await mongoDBSession.findSessionById(req.body.sessionId);
+    const emotions = analyzeJsonSession(sessionWithEmotions);
+    if (emotions) {
         const result = await mongoDBSession.updateSessionEmotion(req.body.userId, req.body.sessionId, emotions);
         console.log("result: " + result)
-        if(result){
-            res.status(200).send({ message: "El processament de les emocions dels videos a finalitzat Correctament" });
-        }
-    }else{
+        // if(result){
+        mongoDBSession.updateSessionEstado(req.body.userId, req.body.sessionId, 4)
+        res.status(200).send({ message: "El processament de les emocions dels videos a finalitzat Correctament" });
+        //}
+    } else {
         return res.status(500).send({ message: "Error en processar les emocions de la Sessió" });
     }
-
 
 }
