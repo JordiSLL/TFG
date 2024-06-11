@@ -131,7 +131,7 @@ function createSessionsDiv(sessions) {
         textDiv.appendChild(countVideosTextElement);
 
         var stateTextElement = document.createElement('p');
-        stateTextElement.id = 'textState'+index;
+        stateTextElement.id = 'textState' + index;
         stateTextElement.innerHTML = "<strong>Estat de la sessió: </strong>" +
             (session.IdEstado === 1 ? "Sessió pendent de processar" :
                 session.IdEstado === 2 ? "Sessió pendent de recepció de dades" :
@@ -148,6 +148,14 @@ function createSessionsDiv(sessions) {
             analyzeBtn.textContent = "Analitzar Sessió";
             analyzeBtn.addEventListener('click', analyzeSession);
             sesionDiv.appendChild(analyzeBtn);
+        } else if (session.IdEstado == 2) {
+            var getPredictionBtn = document.createElement("button");
+            getPredictionBtn.id = "btn" + index;
+            getPredictionBtn.classList.add('getPredictionBtn');
+            getPredictionBtn.dataset.sessionId = session._id;
+            getPredictionBtn.textContent = "Obtenir Prediccions";
+            getPredictionBtn.addEventListener('click', getAllPrediction);
+            sesionDiv.appendChild(getPredictionBtn);
         } else {
             // chart
             var chartDiv = document.createElement('div');
@@ -213,10 +221,44 @@ function getUrlParams() {
     return { userId, sessionId, videoId };
 }
 
+async function getAllPrediction(){
+const sessionId = this.dataset.sessionId;
+    const buttonElement = this;
+    var { userId } = getUrlParams();
+    if (!userId) {
+        userId = sessionStorage.getItem('selectedUserId');
+    }
+    try {
+        const response = await fetch('/getAllPredictionVideos', {
+            method: 'POST',
+            body: JSON.stringify({ userId: userId, sessionId: sessionId }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const responseData = await response.json();
+
+        console.log(responseData)
+        const textStateElement = document.getElementById('textState' + this.id.replace('btn', ''));
+        if (!response.ok) {
+            textStateElement.innerHTML = "<strong>Estat de la sessió: </strong>" + responseData.message;
+            throw new Error('Network response was not ok');
+        } else if (response.status === 200) {
+            buttonElement.classList.remove('analyzeBtn');
+            buttonElement.classList.add('getPredictionBtn');
+            buttonElement.textContent = "Obtenir Prediccions"
+            textStateElement.innerHTML = "<strong>Estat de la sessió: </strong>" + "Sessió pendent de recepció de dades";
+        }
+
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return '';
+    }
+}
+
 async function analyzeSession() {
     //console.log(this.dataset.sessionId);
     const sessionId = this.dataset.sessionId;
-    console.log(this)
+    //console.log(this)
     const buttonElement = this;
 
     var { userId } = getUrlParams();
@@ -230,11 +272,11 @@ async function analyzeSession() {
             body: JSON.stringify({ userId: userId, sessionId: sessionId }),
             headers: { 'Content-Type': 'application/json' }
         });
-        
+
         const responseData = await response.json();
 
         console.log(responseData)
-        const textStateElement = document.getElementById('textState'+this.id.replace('btn', ''));
+        const textStateElement = document.getElementById('textState' + this.id.replace('btn', ''));
         if (!response.ok) {
             textStateElement.innerHTML = "<strong>Estat de la sessió: </strong>" + responseData.message;
             throw new Error('Network response was not ok');
@@ -244,7 +286,7 @@ async function analyzeSession() {
             buttonElement.textContent = "Obtenir Prediccions"
             textStateElement.innerHTML = "<strong>Estat de la sessió: </strong>" + "Sessió pendent de recepció de dades";
         }
-        
+
     } catch (error) {
         console.error('Fetch error:', error);
         return '';

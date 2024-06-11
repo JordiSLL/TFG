@@ -60,6 +60,19 @@ class MongoDBUser {
     }
   }
 
+  async updateSessionEstado(userId, sessionId, estado) {
+    try {
+      const objectId = new ObjectId(sessionId);
+      const result = await this.collection.updateOne(
+        { userId: userId, _id: objectId },
+        { $set: { "IdEstado": estado } }
+      );
+      return result.modifiedCount > 0;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async updateVideoDuration(userId, sessionDate, videoId, videoDuration) {
     try {
       const result = await this.collection.updateOne(
@@ -87,31 +100,57 @@ class MongoDBUser {
 
   async updateVideoEmotion(userId, sessionId, videoId, emotions) {
     try {
-        // Espera a que la promesa emotions se resuelva
-        const data = await emotions;
+      const data = await emotions;
 
-        if (!ObjectId.isValid(sessionId)) {
-            return { error: 'Invalid sessionId format' };
+      if (!ObjectId.isValid(sessionId)) {
+        return { error: 'Invalid sessionId format' };
+      }
+
+      const objectId = new ObjectId(sessionId);
+      const result = await this.collection.updateOne(
+        { userId: userId, _id: objectId, "videos.id": videoId },
+        {
+          $set: {
+            "videos.$.emotion.Face": data.listFace,
+            "videos.$.emotion.Language": data.listLanguage,
+            "videos.$.emotion.Prosody": data.listProsody
+          }
         }
+      );
 
-        const objectId = new ObjectId(sessionId);
-        const result = await this.collection.updateOne(
-            { userId: userId, _id: objectId, "videos.id": videoId },
-            { 
-                $set: {
-                    "videos.$.emotion.Face": data.listFace,
-                    "videos.$.emotion.Language": data.listLanguage,
-                    "videos.$.emotion.Prosody": data.listProsody
-                } 
-            }
-        );
-
-        console.log("Modified count:", result.modifiedCount);
-        return result.modifiedCount > 0;
+      console.log("Modified count:", result.modifiedCount);
+      return result.modifiedCount > 0;
     } catch (error) {
-        throw error;
+      throw error;
     }
-}
+  }
+
+  async updateSessionEmotion(userId, sessionId, videoId, emotions) {
+    try {
+      const data = await emotions;
+
+      if (!ObjectId.isValid(sessionId)) {
+        return { error: 'Invalid sessionId format' };
+      }
+
+      const objectId = new ObjectId(sessionId);
+      const result = await this.collection.updateOne(
+        { userId: userId, _id: objectId },
+        {
+          $set: {
+            "emotion.Face": data.listFace,
+            "emotion.Language": data.listLanguage,
+            "emotion.Prosody": data.listProsody
+          }
+        }
+      );
+
+      console.log("Modified count:", result.modifiedCount);
+      return result.modifiedCount > 0;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 const generateUniqueId = () => {
@@ -164,21 +203,21 @@ const convertVideo = (filePath, callback) => {
 
 const saveJsonToFile = async (jsonData, directoryPath) => {
   try {
-      console.log(jsonData);
+    console.log(jsonData);
 
-      if (!await fsp.access(directoryPath).catch(() => true)) {
-          await fsp.mkdir(directoryPath, { recursive: true });
-      }
-      
-      const filePath = path.join(directoryPath, 'predictions.json');
-      const jsonString = JSON.stringify(jsonData, null, 2);
-      
-      await fsp.writeFile(filePath, jsonString, 'utf8');
-      console.log('File has been saved');
-      return true;
+    if (!await fsp.access(directoryPath).catch(() => true)) {
+      await fsp.mkdir(directoryPath, { recursive: true });
+    }
+
+    const filePath = path.join(directoryPath, 'predictions.json');
+    const jsonString = JSON.stringify(jsonData, null, 2);
+
+    await fsp.writeFile(filePath, jsonString, 'utf8');
+    console.log('File has been saved');
+    return true;
   } catch (err) {
-      console.log('Error writing file', err);
-      return false;
+    console.log('Error writing file', err);
+    return false;
   }
 };
 

@@ -4,8 +4,8 @@ const model = require('../models/url.model');
 const mongoDBSession = new model.MongoDBUser();
 const modelPacient = require('../models/pacient.model');
 const mongoDBpacient = new modelPacient()
-const { sendVideoToAPI, getJsonAPI } = require('../services/humeai.service');
-const { analyzeJsonVideo } = require('../services/analyze.service');
+const { sendVideoToAPI, getJsonAPI, getJobDetail } = require('../services/humeai.service');
+const { analyzeJsonVideo,analyzeJsonSession } = require('../services/analyze.service');
 const fs = require('fs');
 const ffprobePath = require('@ffprobe-installer/ffprobe').path;
 const ffmpeg = require('fluent-ffmpeg');
@@ -163,7 +163,7 @@ exports.uploadVideo = (req, res) => {
                 video.duration = metadata.format.duration;
                 mongoDBSession.updateVideoDuration(userId, currentSession, currentVideo, video.duration)
                     .then(() => {
-                        console.error("Vídeo subido correctamente: Duració: " + video.duration);
+                        console.log("Vídeo subido correctamente: Duració: " + video.duration);
                     })
                     .catch(err => {
                         console.error('Error al actualizar la duración del video en la base de datos:', err);
@@ -298,13 +298,13 @@ exports.processVideoHumeAi = async (req, res) => {
         var session = await mongoDBSession.findSessionById(req.body.sessionId);
         console.log(session);
 
-       /* for (const video of session.videos) {
-            if(video.job_id == 0 || video.job_id == -1){
-            const jobId = await sendVideoToAPI(path.join(video.path,"video.mp4"));
-            const result = await mongoDBSession.updateJobId(req.body.userId, req.body.sessionId, video.id, jobId);
-            console.log(result);
-            }
-        }*/
+        /* for (const video of session.videos) {
+             if(video.job_id == 0 || video.job_id == -1){
+             const jobId = await sendVideoToAPI(path.join(video.path,"video.mp4"));
+             const result = await mongoDBSession.updateJobId(req.body.userId, req.body.sessionId, video.id, jobId);
+             console.log(result);
+             }
+         }*/
         session = await mongoDBSession.findSessionById(req.body.sessionId);
         let hasError = false;
         let errorCount = 0;
@@ -315,49 +315,73 @@ exports.processVideoHumeAi = async (req, res) => {
             }
         }
         if (hasError) {
-            return res.status(500).send({ message: `Torna a processar la sessió. Videos no processats: ${errorCount}`});
+            return res.status(500).send({ message: `ERROR: Intenta tornar a processar la sessió. Videos no processats: ${errorCount}` });
         } else {
+            mongoDBSession.updateSessionEstado(req.body.userId, req.body.sessionId, 2)
             res.status(200).send({ message: "Videos sent to API successfully" });
         }
-        //verificar que ningun job_id es -1 ni 0
-        //si alguno esta mensaje error, vuelva a probar de procer N videos no procesados
-        //cambiar estado a 2
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: "An error occurred while sending videos to API" });
     }
 };
 
-exports.getJobVideoHumeAi = async (req, res ) => {
+exports.getJobVideoHumeAi = async (req, res) => {
     console.log(req.body.userId)
     console.log(req.body.sessionId)
-    
-    const session = await mongoDBSession.findSessionById(req.body.sessionId);
 
-    const response = await getJsonAPI("d4a1b4e2-0b6f-499c-914b-ccf13ba1ad62");
-    if (response) {
-        const isSaved = await model.saveJsonToFile(response, "/app/uploads/user/662fb495bb616992a6d24101/session/240609120135/videos/240609120147");
-        console.log(isSaved)
-        if (isSaved) {
-            console.log('File saved successfully.');
-            const emotions = analyzeJsonVideo(response);
-            console.log(emotions)
-            if (emotions) {
-                const result = await mongoDBSession.updateVideoEmotion(req.body.userId,req.body.sessionId,"240609120147",emotions);
-                console.log("result: "+result)
-                if(result){
-                    console.log("Helloo")
-                    res.status(200).send({ message: "Correct" });
-                }
-            } else {
-                console.log('An error occurred while processing the emotions.');
-                return res.status(500).send({ message: "Error al processar les emocions del JSON" });
+    const session = await mongoDBSession.findSessionById(req.body.sessionId);
+    for (const video of session.videos) {
+        if (session.IdEstado == 2) {
+            const result = getJobDetail(video.job_id);
+            if (result === "FAILED") {
+                console.log('Error en el processament dels videos');
+                return res.status(500).send({ message: "ERROR en el processament dels videos" });
+            } else if (result === "QUEUED" || result === "IN_PROGRESS") {
+                console.log("Els videos encara no s'han processat");
+                return res.status(500).send({ message: "Els videos encara no s'han processat." });
             }
         } else {
-            console.log('An error occurred while saving the file.');
-            return res.status(500).send({ message: "Error al guardar el JSON" });
+            console.log("La sessió no té el estat correcte.");
+            return res.status(500).send({ message: "La sessió no té el estat correcte." });
         }
-    } else {
-        return res.status(500).send({ message: "Error en la petició del JOB" });
     }
+
+    for (const video of session.videos) {
+        const response = await getJsonAPI(video.job_id);
+        if (response) {
+            const isSaved = await model.saveJsonToFile(response, video.path);
+            console.log(isSaved)
+            if (isSaved) {
+                console.log('File saved successfully.');
+                const emotions = analyzeJsonVideo(response);
+                console.log(emotions)
+                if (emotions) {
+                    const result = await mongoDBSession.updateVideoEmotion(req.body.userId, req.body.sessionId, video.id, emotions);
+                    console.log("result: " + result)
+                } else {
+                    console.log('An error occurred while processing the emotions.');
+                    return res.status(500).send({ message: "Error al processar les emocions del JSON" });
+                }
+            } else {
+                console.log('An error occurred while saving the file.');
+                return res.status(500).send({ message: "Error al guardar el JSON" });
+            }
+        } else {
+            return res.status(500).send({ message: "Error en la petició del JOB" });
+        }
+    }
+
+    const emotions =  analyzeJsonSession(session);
+    if(emotions){
+        const result = await mongoDBSession.updateSessionEmotion(req.body.userId, req.body.sessionId, emotions);
+        console.log("result: " + result)
+        if(result){
+            res.status(200).send({ message: "El processament de les emocions dels videos a finalitzat Correctament" });
+        }
+    }else{
+        return res.status(500).send({ message: "Error en processar les emocions de la Sessió" });
+    }
+
+
 }

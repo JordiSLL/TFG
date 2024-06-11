@@ -57,7 +57,7 @@ async function sendVideoToAPI(filePath) {
     throw error;
   }
 }
-//d4a1b4e2-0b6f-499c-914b-ccf13ba1ad62
+
 async function getJsonAPI(jobId) {
   try {
     console.log(jobId)
@@ -77,20 +77,23 @@ async function getJsonAPI(jobId) {
   }
 }
 
-async function getJobDetail() {
+async function getJobDetail(jobId) {
   // Get job details (GET /v0/batch/jobs/:id)
-  const response = await fetch("https://api.hume.ai/v0/batch/jobs/:id", {
+  const response = await fetch(`https://api.hume.ai/v0/batch/jobs/${jobId}`, {
     method: "GET",
     headers: {
-      "X-Hume-Api-Key": ""
+      "X-Hume-Api-Key": config.API_HUMEAI
     },
   });
 
   const body = await response.json();
   console.log(body);
+  console.log(body.state);
+  return body.state
 }
 
 module.exports = {
   sendVideoToAPI,
-  getJsonAPI
+  getJsonAPI,
+  getJobDetail
 };
