@@ -132,7 +132,7 @@ function createSessionsDiv(sessions) {
 
         var stateTextElement = document.createElement('p');
         stateTextElement.id = 'textState' + index;
-        stateTextElement.innerHTML = "<strong>Estat de la sessió: </strong>" +
+        stateTextElement.innerHTML = "<strong>Estat de la Sessió: </strong>" +
             (session.IdEstado === 1 ? "Sessió pendent de processar" :
                 session.IdEstado === 2 ? "Sessió pendent de recepció de dades" :
                     session.IdEstado === 3 ? "Error en el procesament de la Sessió" :
@@ -221,8 +221,8 @@ function getUrlParams() {
     return { userId, sessionId, videoId };
 }
 
-async function getAllPrediction(){
-const sessionId = this.dataset.sessionId;
+async function getAllPrediction() {
+    const sessionId = this.dataset.sessionId;
     const buttonElement = this;
     var { userId } = getUrlParams();
     if (!userId) {
@@ -240,13 +240,12 @@ const sessionId = this.dataset.sessionId;
         console.log(responseData)
         const textStateElement = document.getElementById('textState' + this.id.replace('btn', ''));
         if (!response.ok) {
-            textStateElement.innerHTML = "<strong>Estat de la sessió: </strong>" + responseData.message;
+            textStateElement.innerHTML = "<strong>Estat de la Sessió: </strong>" + responseData.message;
+            //quin error? 
             throw new Error('Network response was not ok');
         } else if (response.status === 200) {
-            buttonElement.classList.remove('analyzeBtn');
-            buttonElement.classList.add('getPredictionBtn');
-            buttonElement.textContent = "Obtenir Prediccions"
-            textStateElement.innerHTML = "<strong>Estat de la sessió: </strong>" + "Sessió pendent de recepció de dades";
+            console.log(userId)
+            window.location.href = `/Dashboard/${userId}`;
         }
 
     } catch (error) {
@@ -278,13 +277,13 @@ async function analyzeSession() {
         console.log(responseData)
         const textStateElement = document.getElementById('textState' + this.id.replace('btn', ''));
         if (!response.ok) {
-            textStateElement.innerHTML = "<strong>Estat de la sessió: </strong>" + responseData.message;
+            textStateElement.innerHTML = "<strong>Estat de la Sessió: </strong>" + responseData.message;
             throw new Error('Network response was not ok');
         } else if (response.status === 200) {
             buttonElement.classList.remove('analyzeBtn');
             buttonElement.classList.add('getPredictionBtn');
             buttonElement.textContent = "Obtenir Prediccions"
-            textStateElement.innerHTML = "<strong>Estat de la sessió: </strong>" + "Sessió pendent de recepció de dades";
+            textStateElement.innerHTML = "<strong>Estat de la Sessió: </strong>" + "Sessió pendent de recepció de dades";
         }
 
     } catch (error) {

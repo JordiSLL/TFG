@@ -20,7 +20,7 @@ async function analyzeJsonVideo(jsonData) {
     return emotions;
 }
 async function analyzeJsonSession(session) {
-    console.log(session)
+    //console.log(session)
     var listFace = avgEmotionsSession(session, ['Face']);
     var listLanguage = avgEmotionsSession(session, ['Language']);
     var listProsody = avgEmotionsSession(session, ['Prosody']);
@@ -30,9 +30,6 @@ async function analyzeJsonSession(session) {
         listProsody: listProsody,
         listLanguage: listLanguage
       };
-      console.log(listFace)
-      console.log(listLanguage)
-      console.log(listProsody)
       console.log("Final emotions 2")
     return emotions;
 }

@@ -298,13 +298,13 @@ exports.processVideoHumeAi = async (req, res) => {
         var session = await mongoDBSession.findSessionById(req.body.sessionId);
         console.log(session);
 
-        /* for (const video of session.videos) {
-             if(video.job_id == 0 || video.job_id == -1){
-             const jobId = await sendVideoToAPI(path.join(video.path,"video.mp4"));
-             const result = await mongoDBSession.updateJobId(req.body.userId, req.body.sessionId, video.id, jobId);
-             console.log(result);
-             }
-         }*/
+        for (const video of session.videos) {
+            if (video.job_id == 0 || video.job_id == -1) {
+                const jobId = await sendVideoToAPI(path.join(video.path, "video.mp4"));
+                const result = await mongoDBSession.updateJobId(req.body.userId, req.body.sessionId, video.id, jobId);
+                console.log(result);
+            }
+        }
         session = await mongoDBSession.findSessionById(req.body.sessionId);
         let hasError = false;
         let errorCount = 0;

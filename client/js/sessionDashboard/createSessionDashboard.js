@@ -63,11 +63,11 @@ function createVideoDiv(session) {
         textDiv.classList.add('textDiv');
 
         var numVideoTextElement = document.createElement('p');
-        numVideoTextElement.innerHTML = "<strong>Video número: " + (index + 1) + " </strong> ";
+        numVideoTextElement.innerHTML = "<strong>Vídeo Número:</strong> " + (index + 1);
         textDiv.appendChild(numVideoTextElement);
 
         var dateTextElement = document.createElement('p');
-        dateTextElement.innerHTML = "<strong>Id del Video: " + video.id + " </strong> ";
+        dateTextElement.innerHTML = "<strong>Id del Video: </strong>" + video.id;
         textDiv.appendChild(dateTextElement);
 
         const hour = video.id.slice(6, 8);
@@ -75,11 +75,11 @@ function createVideoDiv(session) {
         const second = video.id.slice(10);
 
         var hourTextElement = document.createElement('p');
-        hourTextElement.innerHTML = `<strong>Hora del video: ${hour}:${minute}:${second} </strong>`;
+        hourTextElement.innerHTML = `<strong>Hora del Vídeo:</strong> ${hour}:${minute}:${second}`;
         textDiv.appendChild(hourTextElement);
 
         var countVideosTextElement = document.createElement('p');
-        countVideosTextElement.innerHTML = "<strong>Duració: " + parseFloat(video.duration).toFixed(2) + "s</strong>";
+        countVideosTextElement.innerHTML = "<strong>Duració:</strong> " + parseFloat(video.duration).toFixed(2) + "s";
         textDiv.appendChild(countVideosTextElement);
 
         sesionDiv.appendChild(textDiv);
