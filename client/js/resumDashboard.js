@@ -109,6 +109,8 @@ function showResultsSession(results) {
 function selectSession(item) {
     searchSessionsInput.value = item;
     searchSessionsResults.innerHTML = '';
+
+
 }
 
 function createOptionsForSession(sessions) {
@@ -148,31 +150,31 @@ function createSessionsDivs(sessions) {
 
     sessions.forEach(session => {
         if (session.IdEstado === 0 || session.IdEstado === 4) {
-            //console.log(session);
+            console.log(session);
 
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 5; i++) {
                 const div = document.createElement('div');
                 const textPos = document.createElement('p');
                 const textNeg = document.createElement('p');
                 const topEmotion = document.createElement('p');
-                
+
                 switch (i) {
                     case 0:
-                        div.appendChild(calculateQuest(session));
+                        const textId = document.createElement('p');
+                        textId.textContent = session._id;
+                        div.appendChild(textId);
+                        const textdate = document.createElement('p');
+                        textdate.textContent = createDate(session);
+                        div.appendChild(textdate);
+
                         break;
 
                     case 1:
-                        var { negativePercentage, positivePercentage } = calculateEmotionsPercentage(session.emotion.Face);
-                        topEmotion.innerHTML = "<strong>"+session.emotion.Face[0].name+"</strong>";
-                        textNeg.textContent = "Emocions negatives: " + negativePercentage.toFixed(2);
-                        textPos.textContent = "Emocions positives: " + positivePercentage.toFixed(2);
-                        div.appendChild(topEmotion);
-                        div.appendChild(textNeg);
-                        div.appendChild(textPos);
+                        div.appendChild(calculateQuest(session));
                         break;
                     case 2:
-                        var { negativePercentage, positivePercentage } = calculateEmotionsPercentage(session.emotion.Prosody);
-                        topEmotion.innerHTML = "<strong>"+session.emotion.Prosody[0].name+"</strong>";
+                        var { negativePercentage, positivePercentage } = calculateEmotionsPercentage(session.emotion.Face);
+                        topEmotion.innerHTML = "<strong>" + session.emotion.Face[0].name + "</strong>";
                         textNeg.textContent = "Emocions negatives: " + negativePercentage.toFixed(2);
                         textPos.textContent = "Emocions positives: " + positivePercentage.toFixed(2);
                         div.appendChild(topEmotion);
@@ -180,8 +182,17 @@ function createSessionsDivs(sessions) {
                         div.appendChild(textPos);
                         break;
                     case 3:
+                        var { negativePercentage, positivePercentage } = calculateEmotionsPercentage(session.emotion.Prosody);
+                        topEmotion.innerHTML = "<strong>" + session.emotion.Prosody[0].name + "</strong>";
+                        textNeg.textContent = "Emocions negatives: " + negativePercentage.toFixed(2);
+                        textPos.textContent = "Emocions positives: " + positivePercentage.toFixed(2);
+                        div.appendChild(topEmotion);
+                        div.appendChild(textNeg);
+                        div.appendChild(textPos);
+                        break;
+                    case 4:
                         var { negativePercentage, positivePercentage } = calculateEmotionsPercentage(session.emotion.Language);
-                        topEmotion.innerHTML = "<strong>"+session.emotion.Language[0].name+"</strong>";
+                        topEmotion.innerHTML = "<strong>" + session.emotion.Language[0].name + "</strong>";
                         textNeg.textContent = "Emocions negatives: " + negativePercentage.toFixed(2);
                         textPos.textContent = "Emocions positives: " + positivePercentage.toFixed(2);
                         div.appendChild(topEmotion);

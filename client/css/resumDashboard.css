@@ -44,7 +44,7 @@
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1250px;
     margin: 20px auto;
     /*padding: 20px;*/
 }
@@ -65,7 +65,7 @@
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     grid-gap: 20px;
 }
 
@@ -84,6 +84,10 @@
 .sessions>div:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.info0 {
+    grid-column: span 1;
 }
 
 .info1 {
@@ -111,7 +115,7 @@
 
 .sessions {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     grid-gap: 20px;
 }
 
