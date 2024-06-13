@@ -265,6 +265,7 @@ input[type="date"].date-input--has-value::-webkit-datetime-edit-year-field {
     border-radius: 0 0 5px 5px;
     position: absolute;
     width: 28%;
+    z-index: 2;
 }
 
 .search-result {
@@ -380,7 +381,6 @@ input[type="date"].date-input--has-value::-webkit-datetime-edit-year-field {
 }
 
 .custom-checkbox .checkmark {
-    position: relative;
     height: 25px;
     width: 25px;
     background-color: #ccc;
@@ -390,11 +390,11 @@ input[type="date"].date-input--has-value::-webkit-datetime-edit-year-field {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1;
 }
 
 .custom-checkbox .checkmark::after {
     content: "";
-    position: absolute;
     display: none;
     left: 8px;
     top: 4px;
@@ -403,6 +403,7 @@ input[type="date"].date-input--has-value::-webkit-datetime-edit-year-field {
     border: solid white;
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
+    z-index: 1;
 }
 
 .custom-checkbox input:checked ~ .checkmark {

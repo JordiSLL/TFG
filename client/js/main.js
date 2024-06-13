@@ -5,6 +5,7 @@ confCloseBtn.addEventListener("click", closeConfiguration);
 mainBtn.addEventListener('click', handleNavigation);
 documentationBtn.addEventListener('click', handleNavigation);
 sessionBtn.addEventListener('click', handleNavigation);
+plotDashboard.addEventListener('click', handleNavigation);
 if (newUcloseBtn) newUcloseBtn.addEventListener("click", closeNewUser);
 if (saveBtn) saveBtn.addEventListener("click", saveConfiguration);
 if (newUsaveBtn) newUsaveBtn.addEventListener("click", openNewUser);
@@ -14,13 +15,16 @@ function handleNavigation(event) {
     let url;
     switch (targetId) {
         case 'main':
-            url = '/main';  
+            url = '/main';
             break;
         case 'documentation':
-            url = '/documentation';  
+            url = '/documentation';
             break;
         case 'filter':
-            url = '/Dashboard';  
+            url = '/Dashboard';
+            break;
+        case 'plotDashboard':
+            url = '/plotDashboard';
             break;
     }
     fetch(url)
@@ -229,17 +233,17 @@ function selectUser(userId, userName) {
     searchResults.innerHTML = '';
 }
 
-if(searchInput)
-searchInput.addEventListener('input', () => {
-    const query = searchInput.value.trim();
-    const filteredResults = filterResults(query);
-    showResults(filteredResults);
-});
+if (searchInput)
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim();
+        const filteredResults = filterResults(query);
+        showResults(filteredResults);
+    });
 
-if(searchInput)
-searchInput.addEventListener('focus', () => {
-    showResults(data);
-});
+if (searchInput)
+    searchInput.addEventListener('focus', () => {
+        showResults(data);
+    });
 
 
 

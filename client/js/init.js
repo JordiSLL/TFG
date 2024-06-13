@@ -4,6 +4,7 @@ const audioSelect = document.getElementById("audioSource");
 const mainBtn = document.getElementById("main");
 const documentationBtn = document.getElementById("documentation");
 const sessionBtn = document.getElementById("filter");
+const plotDashboard = document.getElementById("plotDashboard");
 
 const profileBtn = document.getElementById("profile-btn");
 const dropdownContent = document.getElementById("dropdown-content");

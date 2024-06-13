@@ -25,6 +25,10 @@ exports.renderDocumentation = (req, res) => {
     res.sendFile(path.join(clientPath, 'documentation.html'));
 };
 
+exports.renderPlotDashboard = (req, res) => {
+    res.sendFile(path.join(clientPath, 'resumDashboard.html'));
+};
+
 exports.renderUserDashboard = async (req, res) => {
     console.log(req.params.userId);
     if (req.params.userId) {

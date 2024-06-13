@@ -11,6 +11,7 @@ router.use(express.static(clientPath));
 router.get('/', controller.renderLoginRegister);
 router.get('/main', auth.checkAuth, controller.renderMain);
 router.get('/documentation', auth.checkAuth, controller.renderDocumentation);
+router.get('/plotDashboard', auth.checkAuth, controller.renderPlotDashboard);
 router.get(['/Dashboard', '/Dashboard/:userId'], auth.checkAuth, controller.renderUserDashboard);
 router.get('/Dashboard/:userId/:sessionId', auth.checkAuth, controller.renderSessionDashboard);
 router.get('/Dashboard/:userId/:sessionId/:videoId', auth.checkAuth, controller.renderVideoDashboard);

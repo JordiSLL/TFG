@@ -16,10 +16,6 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
-app.use('/api/users', UserRouter);
-app.use('/api/pacient', PacientRouter);
-app.use('/', UrlRouter);
-
 app.use('/api/users', (req, res, next) => {
   const origin = req.get('origin');
   if (origin === 'http://localhost:3000') { 
@@ -28,6 +24,10 @@ app.use('/api/users', (req, res, next) => {
     res.redirect('/');
   }
 }, UserRouter);
+
+app.use('/api/users', UserRouter);
+app.use('/api/pacient', PacientRouter);
+app.use('/', UrlRouter);
 
 app.use((req, res) => {
     res.redirect('/main');

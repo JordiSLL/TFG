@@ -6,10 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/userDashboard.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js" integrity="sha512-UXumZrZNiOwnTcZSHLOfcTs0aos2MzBWHXOHOuB0J/R44QB0dwY5JgfbvljXcklVf65Gc4El6RjZ+lnwd2az2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/2.0.1/chartjs-plugin-zoom.min.js"></script>
+    <link rel="stylesheet" href="/css/resumDashboard.css">
 </head>
 
 <body>
@@ -39,6 +36,12 @@
                 </label>
                 <div id="searchResults" class="search-results"></div>
             </div>
+            <div class="searchS">
+                <label class="input-wrapper" data-text="">
+                    <input id="searchSessionsInput" type="text" placeholder="Sessió...">
+                </label>
+                <div id="searchSessionsResults" class="search-results"></div>
+            </div>
         </section>
 
         <div id="configuration" class="popup">
@@ -56,44 +59,30 @@
         <div class="container sessionContainer" id="sessionContainer" style="display:none;">
             <div class="grid-container">
                 <div class="info1">
-                    <h2>Informació General</h2>
-                    <div>Número de Sessions: <span id="numSession">0</span></div>
+                    <h2>Qüestionari</h2>
                 </div>
                 <div class="info2">
-                    <h2>Resultats Globals</h2>
-                    <div></div>
+                    <h2>Face Model</h2>
                 </div>
-                <div class="chart1" colspan="2">
-                    <h2>Resultats Globals de l'Usuari</h2>
-                    <canvas id="chartGlobal"></canvas>
+                <div class="info3">
+                    <h2>Speech Model</h2>
                 </div>
-                <div class="chart2" colspan="2">
-                    <h2>Gràfic Evolitu de les emocions</h2>
-                    <canvas id="chart"></canvas>
+                <div class="info4">
+                    <h2>Language Model</h2>
                 </div>
-                <section class="modelButtons">
-                    <button id="faceModelButton" class="modelButton">Face Model</button>
-                    <button id="speechModelButton" class="modelButton">Speech Model</button>
-                    <button id="languageModelButton" class="modelButton">Language Model</button>
-                </section>
-                <div class="calendari" id="calendari">
-                    </div>
-
-                </div>
-                <section class="sessions" id="sessions">
-                </section>
             </div>
+            <section class="sessions" id="sessions">
+            </section>
+        </div>
         </div>
         <div id="errorDiv" class="error-message">
             L'usuari seleccionat no té cap sessió creada.
         </div>
     </section>
-    <script src="/js/colorChart.js"></script>
     <script src="/js/init.js"></script>
     <script src="/js/main.js"></script>
-    <script src="/js/userDashboard/createUserDashboard.js"></script>
-    <script src="/js/userDashboard/calendar.js"></script>
-    <script src="/js/userDashboard/updateUserDashboard.js"></script>
+    <script src="/js/resumDashboard.js"></script>
+    <script src="/js/EmotionsPosNeg.js"></script>
 </body>
 
 </html>

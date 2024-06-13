@@ -19,6 +19,7 @@ function verificarSelectedUserId() {
     const selectedUserId = sessionStorage.getItem('selectedUserId');
     if (selectedUserId) {
         //console.log('El valor de selectedUserId es:', selectedUserId);
+        clearAllCharts();
         fetchsession(selectedUserId);
     } else {
         console.log('No hay ningún valor almacenado en selectedUserId');
@@ -553,4 +554,17 @@ function avgEmotionsSession(data, modelNames) {
     });
 
     return averagedEmotions.sort((a, b) => b.score - a.score);
+}
+
+function clearAllCharts() {
+    for (const id in Chart.instances) {
+        if (Chart.instances.hasOwnProperty(id)) {
+            Chart.instances[id].destroy(); 
+        }
+}
+
+    const legendElement = document.querySelector('.legend');
+    if (legendElement) {
+        legendElement.remove();
+    }
 }
