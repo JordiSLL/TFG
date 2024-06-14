@@ -6,6 +6,8 @@ const searchSessionsInput = document.getElementById('searchSessionsInput');
 const searchSessionsResults = document.getElementById('searchSessionsResults');
 
 const sessionOpt = [];
+var sessions = [];
+var order = [];
 
 document.addEventListener('DOMContentLoaded', async function () {
     searchSessionsInput.disabled = true;
@@ -60,9 +62,10 @@ function fetchsession(userId) {
                 sessionContainer.style.display = 'block';
                 sessionContainer.offsetHeight;
                 sessionContainer.classList.add('show');
+                sessions = data.sessions;
                 data.sessions.sort((a, b) => b.date.localeCompare(a.date));
                 createOptionsForSession(data.sessions);
-                searchSessionsInput.value = sessionOpt[0];
+                searchSessionsInput.value = sessionOpt[0].date;
                 createSessionsDivs(data.sessions);
             }
         })
@@ -89,17 +92,17 @@ function filterResultsSession(query) {
 
 
 searchSessionsInput.addEventListener('focus', () => {
-    console.log("searchSessionsInputF")
+    //console.log("searchSessionsInputF")
     showResultsSession(sessionOpt);
 });
 
 function showResultsSession(results) {
-    console.log("showResults2")
-    console.log(results)
+   // console.log("showResults2")
+    //console.log(results)
     searchSessionsResults.innerHTML = '';
     results.forEach(item => {
         const option = document.createElement('div');
-        option.textContent = item;
+        option.textContent = item.date;
         option.classList.add('search-result');
         option.addEventListener('click', () => selectSession(item));
         searchSessionsResults.appendChild(option);
@@ -107,17 +110,27 @@ function showResultsSession(results) {
 }
 
 function selectSession(item) {
-    searchSessionsInput.value = item;
+    searchSessionsInput.value = item.date;
     searchSessionsResults.innerHTML = '';
-
-
+    console.log(item.id)
+    sessionsContainer.innerHTML= "";
+    if(item.id === "ALL"){
+    createSessionsDivs(sessions)
+    }else{
+        createSessionsDivs(sessions.filter(session => {
+            return session.date === item.id;
+        }))
+        
+    }
 }
 
 function createOptionsForSession(sessions) {
-    sessionOpt.push("Totes les Sessions")
+    sessionOpt.push({date:"Totes les Sessions",id:"ALL"})
     sessions.forEach(session => {
         const date = createDate(session);
-        sessionOpt.push(date)
+        if (!sessionOpt.some(opt => opt.date === date) && (session.IdEstado === 0 || session.IdEstado === 4)) {
+            sessionOpt.push({ date: date, id: session.date });
+        }
     });
     console.log(sessionOpt)
 }
@@ -147,22 +160,30 @@ function selectUser(userId, userName) {
 function createSessionsDivs(sessions) {
     const sessionsContainer = document.getElementById('sessions');
     console.log(sessions);
-    console.log(sessions.length)
     sessions.sort((a, b) => a.date.localeCompare(b.date));
+    let haveOrder = order.length > 0;
+    console.log("order")
+    console.log(order)
+    console.log(haveOrder)
     for (let index = sessions.length - 1; index >= 0; index--) {
         const session = sessions[index];
-        console.log(index);
-        console.log(session);
+        //console.log(index);
+        //console.log(session);
         if (session.IdEstado === 0 || session.IdEstado === 4) {
+            if (!haveOrder)
+                order.push({index:index+1, session:session });
             for (let i = 0; i < 5; i++) {
                 const div = document.createElement('div');
                 const textPos = document.createElement('p');
                 const textNeg = document.createElement('p');
                 const topEmotion = document.createElement('p');
-
                 switch (i) {
                     case 0:
                         const textId = document.createElement('p');
+                        const matchingOrder = order.find(item => item.session._id === session._id);
+                        if(haveOrder)
+                        textId.innerHTML = "<strong>Número Sessió: </strong>" + matchingOrder.index;
+                        else
                         textId.innerHTML = "<strong>Número Sessió: </strong>" + (index+1);
                         div.appendChild(textId);
                         const textdate = document.createElement('p');
@@ -211,7 +232,6 @@ function createSessionsDivs(sessions) {
                     default:
                         console.log('Unexpected case:', i);
                 }
-
                 sessionsContainer.appendChild(div);
             }
         }
@@ -221,7 +241,6 @@ function createSessionsDivs(sessions) {
 function calculateQuest(div,session) {
     const text = document.createElement('p');
     if (session.IndQuestionari) {
-        let resultName;
         const resultQ = parseInt(session.resultQ);
         switch (true) {
             case (resultQ >= 0 && resultQ <= 4):
