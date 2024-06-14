@@ -389,3 +389,14 @@ exports.getJobVideoHumeAi = async (req, res) => {
     }
 
 }
+
+exports.setQresult = async (req, res) => {
+    console.log(req.body)
+    try {
+        const result = await mongoDBSession.updateQresult(req.body.sessionId, req.body.resultQ);
+        res.status(200).send({ message: "Resultat del questionari afegit correctament"});
+    } catch (error) {
+        console.log("Error al afegir el resultat del questionari", error);
+        res.status(500).send({ message: "Error al afegir el resultat del questionari" });
+    }
+};

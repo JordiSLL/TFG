@@ -206,3 +206,26 @@ function avgEmotionsSession(data, modelNames) {
 
     return averagedEmotions.sort((a, b) => b.score - a.score);
 }
+
+resultQ.addEventListener('change', function() {
+        var value = parseInt(this.value);
+        console.log('El valor está entre 0 y 27');
+        const { sessionId } = getUrlParams();
+        fetch('/setQResult', {
+            method: 'POST',
+            body: JSON.stringify({ sessionId: sessionId, resultQ: value }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data)
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+});

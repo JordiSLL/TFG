@@ -10,6 +10,7 @@ const uploadBtn = document.getElementById('upload-btn');
 const uploadVideoDiv = document.getElementById('uploadVideo');
 
 const videoBatchDiv = document.getElementById('videoBatch');
+const checkbox = document.querySelector('.custom-checkbox input');
 
 let mediaRecorder;
 let recordedChunks = [];
@@ -124,7 +125,8 @@ startButton.addEventListener('click', async () => {
         if (!tmpcurrentSession) {
             const SessionData = {
                 userId: sessionStorage.getItem('selectedUserId'),
-                date: tmpcurrentSession ? tmpcurrentSession.sessionDate : ''
+                date: tmpcurrentSession ? tmpcurrentSession.sessionDate : '',
+                IndQuestionari: checkbox.checked ? 1: 0
             };
 
             const response = await fetch('/createSession', {
@@ -244,7 +246,7 @@ async function handleStop() {
     finishButton.disabled = false;
 }
 
-const checkbox = document.querySelector('.custom-checkbox input');
+
 checkbox.addEventListener('change', function () {
     console.log('Checkbox checked:', checkbox.checked);
 });

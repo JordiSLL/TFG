@@ -4,6 +4,9 @@ const sessionIdDiv = document.getElementById("sessionId");
 const sessionData = document.getElementById("sessionData");
 const sessionHour = document.getElementById("sessionHour");
 const videosNumber = document.getElementById("videosNumber");
+const resultQ = document.getElementById('resultatQ');
+const inputQresult = document.getElementById('input-Qresult');
+
 backButton.addEventListener("click", returnUserSession);
 
 var sessionEmotions = [];
@@ -41,6 +44,13 @@ function fetchsession(sessionId) {
             videoEmotions = data.session.videos.map(video => video.emotion);
             //console.log("videoEmotions")
             //console.log(videoEmotions)
+            //console.log(data.session.IndQuestionari)
+            if (!data.session.IndQuestionari || data.session.IndQuestionari == 0){
+                inputQresult.style.display = 'none';
+            }else{
+                inputQresult.style.display = 'block';
+                resultQ.value = data.session.resultQ;
+            }
             createVideoDiv(data.session);
             createGlobalChart(data.session)
             createChartLine(data.session.videos);

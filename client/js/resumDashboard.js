@@ -147,11 +147,13 @@ function selectUser(userId, userName) {
 function createSessionsDivs(sessions) {
     const sessionsContainer = document.getElementById('sessions');
     console.log(sessions);
-
-    sessions.forEach(session => {
+    console.log(sessions.length)
+    sessions.sort((a, b) => a.date.localeCompare(b.date));
+    for (let index = sessions.length - 1; index >= 0; index--) {
+        const session = sessions[index];
+        console.log(index);
+        console.log(session);
         if (session.IdEstado === 0 || session.IdEstado === 4) {
-            console.log(session);
-
             for (let i = 0; i < 5; i++) {
                 const div = document.createElement('div');
                 const textPos = document.createElement('p');
@@ -161,22 +163,24 @@ function createSessionsDivs(sessions) {
                 switch (i) {
                     case 0:
                         const textId = document.createElement('p');
-                        textId.textContent = session._id;
+                        textId.innerHTML = "<strong>Número Sessió: </strong>" + (index+1);
                         div.appendChild(textId);
                         const textdate = document.createElement('p');
-                        textdate.textContent = createDate(session);
+                        textdate.innerHTML = "<strong>Data: </strong>" + createDate(session);
                         div.appendChild(textdate);
 
                         break;
 
                     case 1:
-                        div.appendChild(calculateQuest(session));
+                        div.appendChild(calculateQuest(div,session));
                         break;
                     case 2:
                         var { negativePercentage, positivePercentage } = calculateEmotionsPercentage(session.emotion.Face);
                         topEmotion.innerHTML = "<strong>" + session.emotion.Face[0].name + "</strong>";
-                        textNeg.textContent = "Emocions negatives: " + negativePercentage.toFixed(2);
-                        textPos.textContent = "Emocions positives: " + positivePercentage.toFixed(2);
+                        topEmotion.classList.add("topEmotion");
+                        textNeg.textContent = "Emocions negatives: " + negativePercentage.toFixed(2) + "%";
+                        textPos.textContent = "Emocions positives: " + positivePercentage.toFixed(2) + "%";
+                        div.classList.add(positivePercentage > negativePercentage ? "positiveDiv":"negativeDiv");
                         div.appendChild(topEmotion);
                         div.appendChild(textNeg);
                         div.appendChild(textPos);
@@ -184,8 +188,10 @@ function createSessionsDivs(sessions) {
                     case 3:
                         var { negativePercentage, positivePercentage } = calculateEmotionsPercentage(session.emotion.Prosody);
                         topEmotion.innerHTML = "<strong>" + session.emotion.Prosody[0].name + "</strong>";
-                        textNeg.textContent = "Emocions negatives: " + negativePercentage.toFixed(2);
-                        textPos.textContent = "Emocions positives: " + positivePercentage.toFixed(2);
+                        topEmotion.classList.add("topEmotion");
+                        textNeg.textContent = "Emocions negatives: " + negativePercentage.toFixed(2) + "%";
+                        textPos.textContent = "Emocions positives: " + positivePercentage.toFixed(2) + "%";
+                        div.classList.add(positivePercentage > negativePercentage ? "positiveDiv":"negativeDiv");
                         div.appendChild(topEmotion);
                         div.appendChild(textNeg);
                         div.appendChild(textPos);
@@ -193,8 +199,10 @@ function createSessionsDivs(sessions) {
                     case 4:
                         var { negativePercentage, positivePercentage } = calculateEmotionsPercentage(session.emotion.Language);
                         topEmotion.innerHTML = "<strong>" + session.emotion.Language[0].name + "</strong>";
-                        textNeg.textContent = "Emocions negatives: " + negativePercentage.toFixed(2);
-                        textPos.textContent = "Emocions positives: " + positivePercentage.toFixed(2);
+                        topEmotion.classList.add("topEmotion");
+                        textNeg.textContent = "Emocions negatives: " + negativePercentage.toFixed(2) + "%";
+                        textPos.textContent = "Emocions positives: " + positivePercentage.toFixed(2) + "%";
+                        div.classList.add(positivePercentage > negativePercentage ? "positiveDiv":"negativeDiv");
                         div.appendChild(topEmotion);
                         div.appendChild(textNeg);
                         div.appendChild(textPos);
@@ -207,36 +215,43 @@ function createSessionsDivs(sessions) {
                 sessionsContainer.appendChild(div);
             }
         }
-    });
+    }
 }
 
-function calculateQuest(session) {
+function calculateQuest(div,session) {
     const text = document.createElement('p');
-    if (session.IndQuestionari && session.resultQ) {
+    if (session.IndQuestionari) {
         let resultName;
         const resultQ = parseInt(session.resultQ);
         switch (true) {
             case (resultQ >= 0 && resultQ <= 4):
-                resultName = "Cap - Mínim";
+                resultClass = 'cap-minim';
+                resultText = 'Cap - Mínim';
                 break;
             case (resultQ >= 5 && resultQ <= 9):
-                resultName = "Lleu";
+                resultClass = 'lleu';
+                resultText = 'Lleu';
                 break;
             case (resultQ >= 10 && resultQ <= 14):
-                resultName = "Moderat";
+                resultClass = 'moderat';
+                resultText = 'Moderat';
                 break;
             case (resultQ >= 15 && resultQ <= 19):
-                resultName = "Moderadament greu";
+                resultClass = 'moderadament-greu';
+                resultText = 'Moderadament greu';
                 break;
             case (resultQ >= 20 && resultQ <= 27):
-                resultName = "Greu";
+                resultClass = 'greu';
+                resultText = 'Greu';
                 break;
             default:
-                resultName = "Resultat no definit";
+                resultClass = 'no-definit';
+                resultText = 'Resultat no definit';
         }
-        text.textContent = resultName;
+        text.textContent = resultText;
+        div.id = resultClass;
     } else {
-        text.textContent = "No s'ha utilitzat qüestionari";
+        text.innerHTML = "<strong>No s'ha utilitzat qüestionari</strong>";
     }
     return text;
 }

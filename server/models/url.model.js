@@ -152,6 +152,29 @@ class MongoDBUser {
       throw error;
     }
   }
+
+  async updateQresult(sessionId, qResult) {
+    try {
+      if (!ObjectId.isValid(sessionId)) {
+        return { error: 'Invalid sessionId format' };
+      }
+
+      const objectId = new ObjectId(sessionId);
+      const result = await this.collection.updateOne(
+        {_id: objectId },
+        {
+          $set: {
+            "resultQ": qResult
+          }
+        }
+      );
+
+      console.log("Modified count:", result.modifiedCount);
+      return result.modifiedCount > 0;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 const generateUniqueId = () => {
