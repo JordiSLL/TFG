@@ -5,7 +5,7 @@ const sessionsContainer = document.getElementById('sessions');
 const searchSessionsInput = document.getElementById('searchSessionsInput');
 const searchSessionsResults = document.getElementById('searchSessionsResults');
 
-const sessionOpt = [];
+var sessionOpt = [];
 var sessions = [];
 var order = [];
 
@@ -125,6 +125,7 @@ function selectSession(item) {
 }
 
 function createOptionsForSession(sessions) {
+    sessionOpt = [];
     sessionOpt.push({date:"Totes les Sessions",id:"ALL"})
     sessions.forEach(session => {
         const date = createDate(session);
@@ -154,7 +155,7 @@ function selectUser(userId, userName) {
     verificarSelectedUserId();
     searchResults.innerHTML = '';
     searchSessionsInput.value = '';
-
+    order = [];
 }
 
 function createSessionsDivs(sessions) {
@@ -162,9 +163,9 @@ function createSessionsDivs(sessions) {
     console.log(sessions);
     sessions.sort((a, b) => a.date.localeCompare(b.date));
     let haveOrder = order.length > 0;
-    console.log("order")
-    console.log(order)
-    console.log(haveOrder)
+    //console.log("order")
+    //console.log(order)
+    //console.log(haveOrder)
     for (let index = sessions.length - 1; index >= 0; index--) {
         const session = sessions[index];
         //console.log(index);
