@@ -87,3 +87,43 @@ function checkInconsistencies(Face, Language, Prosody) {
     console.log(message)
     return message;
 }
+
+function checkInconcruent(Face, Language, Prosody) {
+    const faceResults = calculateEmotionsPercentage(Face);
+    const speechResults = calculateEmotionsPercentage(Prosody);
+    const languageResults = calculateEmotionsPercentage(Language);
+
+    const results = [
+        { name: 'Face', ...faceResults },
+        { name: 'Speech', ...speechResults },
+        { name: 'Language', ...languageResults }
+    ];
+
+    let positiveCount = 0;
+    let negativeCount = 0;
+    let positiveModels = [];
+    let negativeModels = [];
+
+    results.forEach(result => {
+        if (result.positivePercentage > 50) {
+            positiveCount++;
+            positiveModels.push(result.name);
+        }
+        if (result.negativePercentage > 50) {
+            negativeCount++;
+            negativeModels.push(result.name);
+        }
+    });
+
+    let message = "<strong>Anàlisi d'emocions: </strong>";
+    if (positiveCount === 3) {
+        message += 'predominantment <strong><span class="positive">positives</span></strong>.';
+    } else if (negativeCount === 3) {
+        message += 'predominantment <strong><span class="negative">negatives</span></strong>.';
+    } else if (positiveCount > 0 && negativeCount > 0) {
+        message += '<strong><span class="negative">Incongruències detectades</span></strong>';
+    } else {
+        message += "    resultats són mixtos.";
+    }
+    return message;
+}

@@ -45,9 +45,9 @@ function fetchsession(sessionId) {
             //console.log("videoEmotions")
             //console.log(videoEmotions)
             //console.log(data.session.IndQuestionari)
-            if (!data.session.IndQuestionari || data.session.IndQuestionari == 0){
+            if (!data.session.IndQuestionari || data.session.IndQuestionari == 0) {
                 inputQresult.style.display = 'none';
-            }else{
+            } else {
                 inputQresult.style.display = 'block';
                 resultQ.value = data.session.resultQ;
             }
@@ -92,6 +92,11 @@ function createVideoDiv(session) {
         countVideosTextElement.innerHTML = "<strong>Duració:</strong> " + parseFloat(video.duration).toFixed(2) + "s";
         textDiv.appendChild(countVideosTextElement);
 
+        var inconDet = document.createElement('p');
+        var textInc = checkInconcruent(video.emotion.Face, video.emotion.Prosody, video.emotion.Language);
+        inconDet.innerHTML = textInc;
+        textDiv.appendChild(inconDet);
+
         sesionDiv.appendChild(textDiv);
 
         var chartDiv = document.createElement('div');
@@ -120,7 +125,7 @@ function createGlobalChart(session) {
     var chartCanvas = document.getElementById("chartGlobal");
     console.log(session)
     emotions = getAvgEmotions(session.emotion.Prosody, session.emotion.Language, session.emotion.Face)
-    globalResult(emotions,session.emotion)
+    globalResult(emotions, session.emotion)
     createChart(emotions, chartCanvas);
     var chart = Chart.getChart(chartCanvas)
     chart.options.plugins.legend.position = 'bottom';
@@ -139,7 +144,7 @@ function createChartLine(videos) {
     /*Aquest for nomes serveix per crear un objecte que vagi del 1 fins al numero de videos totals
     Això es degut a que si labels no és un object.keys el zoom i el moviment lateral deixa de funcionar.
     De moment aquesta es la solució més fàcil que he trobat.
-    */ 
+    */
     for (let i = 1; i <= videos.length; i++) {
         videoObject[i] = 0.5;
     }
