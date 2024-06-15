@@ -16,7 +16,6 @@ function createCalendar(sessions) {
 
       const daysInMonth = getDaysInMonth(year, month);
 
-      // Agregar casillas vacías para ajustar el primer día de la semana
       for (let i = 1; i < startDate.getDay(); i++) {
         html += `<div class="day empty"></div>`;
       }
@@ -25,8 +24,7 @@ function createCalendar(sessions) {
         const dateString = `${pad(i)}-${pad(month + 1)}-${year}`;
         let dayClass = "day normal";
         const contributedData = data.find((item) => item.date === dateString);
-
-        if (contributedData) {
+        if (contributedData) {  
           dayClass = `day sessionCalendar level-${contributedData.level}`;
         }
 
@@ -97,9 +95,17 @@ function convertSessionsDates(sessions, defaultLevel = 1) {
       const month = dateString.slice(2, 4);
       const day = dateString.slice(4, 6);
       const formattedDate = `${day}-${month}-${year}`;
+      var result = false;
+      if (session.IdEstado === 4){
+      const emotion = getAvgEmotions(session.emotion.Prosody, session.emotion.Language, session.emotion.Face);
+      var { negativePercentage, positivePercentage } = calculateEmotionsPercentage(emotion);
+      result = positivePercentage > negativePercentage ? true : false;
+      }
+      //console.log(session.date)
       defaultLevel = session.IdEstado === 1 ? 3 :
                              session.IdEstado === 2 ? 3 :
-                             session.IdEstado === 3 ? 3 : 1; 
+                             session.IdEstado === 4 && result ? 1 : 2; 
+       //console.log(defaultLevel)
       return {
           date: formattedDate,
           level: defaultLevel

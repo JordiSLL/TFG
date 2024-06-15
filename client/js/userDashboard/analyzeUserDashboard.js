@@ -30,7 +30,7 @@ function globalResult(sessions) {
 }
 
 function calculateEmotionsPercentage(model) {
-    console.log(model)
+    //console.log(model)
     const negativesSet = new Set(negatives);
     const positivesSet = new Set(positives);
 
