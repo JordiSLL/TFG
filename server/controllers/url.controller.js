@@ -337,11 +337,13 @@ exports.getJobVideoHumeAi = async (req, res) => {
     const session = await mongoDBSession.findSessionById(req.body.sessionId);
     for (const video of session.videos) {
         if (session.IdEstado == 2) {
-            const result = getJobDetail(video.job_id);
-            if (result === "FAILED") {
+            const result = await getJobDetail(video.job_id);
+            console.log("result")
+            console.log(result.status)
+            if (result.status === "FAILED") {
                 console.log('Error en el processament dels videos');
                 return res.status(500).send({ message: "ERROR en el processament dels videos" });
-            } else if (result === "QUEUED" || result === "IN_PROGRESS") {
+            } else if (result.status === "QUEUED" || result.status === "IN_PROGRESS") {
                 console.log("Els videos encara no s'han processat");
                 return res.status(500).send({ message: "Els videos encara no s'han processat." });
             }

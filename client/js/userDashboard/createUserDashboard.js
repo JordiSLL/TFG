@@ -293,12 +293,16 @@ async function analyzeSession() {
         const textStateElement = document.getElementById('textState' + this.id.replace('btn', ''));
         if (!response.ok) {
             textStateElement.innerHTML = "<strong>Estat de la Sessió: </strong>" + responseData.message;
+            console.log(responseData)
             throw new Error('Network response was not ok');
         } else if (response.status === 200) {
+            console.log(responseData)
             buttonElement.classList.remove('analyzeBtn');
             buttonElement.classList.add('getPredictionBtn');
             buttonElement.textContent = "Obtenir Prediccions"
             textStateElement.innerHTML = "<strong>Estat de la Sessió: </strong>" + "Sessió pendent de recepció de dades";
+            buttonElement.removeEventListener('click', analyzeSession);
+            buttonElement.addEventListener('click', getAllPrediction);
         }
 
     } catch (error) {
@@ -311,6 +315,7 @@ function createGlobalChart(sessions) {
     var chartCanvas = document.getElementById("chartGlobal");
     //console.log(sessions)
     emotions = avgEmotionsSession(sessions, ['Face', 'Language', 'Prosody'])
+    //console.log(emotions)
     globalResult(sessions)
     createChart(emotions, chartCanvas);
     var chart = Chart.getChart(chartCanvas)
@@ -541,7 +546,7 @@ function createChart(emotions, chartCanvas) {
 function avgEmotionsSession(data, modelNames) {
     const emotions = {};
 
-    const filteredData = data.filter(session => session === undefined || session.IdEstado === 0);
+    const filteredData = data.filter(session => session.IdEstado === 4 || session.IdEstado === 0);
 
     modelNames.forEach(modelName => {
         filteredData.forEach(session => {
