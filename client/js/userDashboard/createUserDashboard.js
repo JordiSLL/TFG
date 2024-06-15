@@ -53,8 +53,10 @@ function fetchsession(userId) {
                 errorMSJ.classList.remove('show');
                 createCalendar(data.sessions)
                 createSessionsDiv(data.sessions);
-                createGlobalChart(data.sessions);
-                createLineChart(data.sessions);
+                if (data.sessions.some(session => session.IdEstado === 0 || session.IdEstado === 4)) {
+                    createGlobalChart(data.sessions);
+                    createLineChart(data.sessions);
+                }
                 sessionEmotions = data.sessions.map(session => session.emotion);
                 console.log(sessionEmotions)
                 numSessions.textContent = data.sessions.length;
@@ -131,6 +133,17 @@ function createSessionsDiv(sessions) {
         countVideosTextElement.innerHTML = "<strong>Número de videos: </strong>" + session.videos.length;
         textDiv.appendChild(countVideosTextElement);
 
+        if (session.IdEstado == 0 || session.IdEstado == 4) {
+            const text = calculateQuest(session)
+            var resultQ = document.createElement('p');
+            resultQ.innerHTML = "<strong>Resultat Qüestionari: </strong>" + text;
+            textDiv.appendChild(resultQ);
+            var inconDet = document.createElement('p');
+            var textInc = checkInconcruent(session.emotion.Face, session.emotion.Prosody, session.emotion.Language);
+            inconDet.innerHTML = textInc;
+            textDiv.appendChild(inconDet);
+        }
+
         var stateTextElement = document.createElement('p');
         stateTextElement.id = 'textState' + index;
         stateTextElement.innerHTML = "<strong>Estat de la Sessió: </strong>" +
@@ -158,6 +171,7 @@ function createSessionsDiv(sessions) {
             getPredictionBtn.addEventListener('click', getAllPrediction);
             sesionDiv.appendChild(getPredictionBtn);
         } else {
+
             // chart
             var chartDiv = document.createElement('div');
             chartDiv.classList.add('chart-container');
@@ -560,12 +574,43 @@ function avgEmotionsSession(data, modelNames) {
 function clearAllCharts() {
     for (const id in Chart.instances) {
         if (Chart.instances.hasOwnProperty(id)) {
-            Chart.instances[id].destroy(); 
+            Chart.instances[id].destroy();
         }
-}
+    }
 
     const legendElement = document.querySelector('.legend');
     if (legendElement) {
         legendElement.remove();
     }
+    infoModel.innerHTML = "";
+}
+
+function calculateQuest(session) {
+    var text = "";
+    if (session.IndQuestionari) {
+        const resultQ = parseInt(session.resultQ);
+        switch (true) {
+            case (resultQ >= 0 && resultQ <= 4):
+                resultText = '<strong><span class="cap-minim">Cap - Mínim</span></strong>';
+                break;
+            case (resultQ >= 5 && resultQ <= 9):
+                resultText = '<strong><span class="lleu"> Lleu</span></strong>';
+                break;
+            case (resultQ >= 10 && resultQ <= 14):
+                resultText = '<strong><span class="moderat"> Moderat</span></strong>';
+                break;
+            case (resultQ >= 15 && resultQ <= 19):
+                resultText = '<strong><span class="moderadament-greu"> Moderadament greu</span></strong>';
+                break;
+            case (resultQ >= 20 && resultQ <= 27):
+                resultText = '<strong><span class="greu"> Greu</span></strong>';
+                break;
+            default:
+                resultText = 'Resultat no definit';
+        }
+        text = resultText;
+    } else {
+        text = "No s'ha utilitzat qüestionari";
+    }
+    return text;
 }

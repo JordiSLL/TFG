@@ -349,3 +349,23 @@
 .negative {
   color: red;
 }
+
+.cap-minim {
+  color: green; 
+}
+
+.lleu {
+  color: #ffa0a0; 
+}
+
+.moderat {
+  color: #FD6C6C; 
+}
+
+.moderadament-greu {
+  color: #f83b3b; 
+}
+
+.greu {
+  color: #c11414; 
+}

@@ -77,7 +77,7 @@ function checkInconsistencies() {
     } else if (negativeCount === 3) {
         message += '<br>Els tres models mostren emocions predominantment <strong><span class="negative">negatives</span></strong>.';
     } else if (positiveCount > 0 && negativeCount > 0) {
-        message += '<strong><span class="negative">Inconsistències detectades</span></strong>';
+        message += '<strong><span class="negative">Incongruències detectades</span></strong>';
         message += `<br>Models amb emocions positives: <span class="positive"><strong>${positiveModels.join(', ')}</strong></span>.`;
         message += `<br>Models amb emocions negatives: <span class="negative"><strong>${negativeModels.join(', ')}</strong></span>.`;
     } else {
