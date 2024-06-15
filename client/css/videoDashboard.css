@@ -28,14 +28,16 @@ button {
 
 .backButton {
     background-color: #007bff;
-    border: 1px solid  #007bff ; 
+    border: 1px solid #007bff;
     color: #fff;
 }
+
 .backButton:hover {
-    background-color: #fff; 
+    background-color: #fff;
     color: #007bff;
-    border: 1px solid  #007bff ; 
+    border: 1px solid #007bff;
 }
+
 .modelButtons {
     display: flex;
 }
@@ -53,9 +55,11 @@ button {
 .modelButton.inactive {
     background-color: #6c757d;
 }
+
 .modelButton.inactive:hover {
     background-color: #a5aaaf;
 }
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -81,6 +85,11 @@ button {
 
 .info1 {
     grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .info2 {
@@ -91,9 +100,10 @@ button {
     grid-column: span 1;
 }
 
-.chart1{
+.chart1 {
     grid-column: span 3;
 }
+
 .chart2 {
     grid-column: span 2;
 }
@@ -101,8 +111,9 @@ button {
 .video {
     grid-column: span 2;
 }
+
 /**/
-.analyzedText{
+.analyzedText {
     grid-column: span 4;
 }
 
@@ -127,7 +138,7 @@ button {
     text-align: left;
 }
 
-div > h2{
+div>h2 {
     margin-top: 5px;
     margin-bottom: 5px;
 }
@@ -137,26 +148,42 @@ div > h2{
     width: 80%;
     height: 100%;
     display: grid;
-    place-items: center; 
+    place-items: center;
     margin: auto;
 }
 
 /*Frases*/
-.text-content, .chart-container {
-    flex:1;
+.text-content,
+.chart-container {
+    flex: 1;
 }
 
 .chart-container {
     display: flex;
-    justify-content: center; 
-    align-items: center; 
+    justify-content: center;
+    align-items: center;
 }
 
 
-@media (max-width: 1220px) {
-   
-}
+@media (max-width: 1220px) {}
 
-#chart-doughnut0{
+#chart-doughnut0 {
     margin-left: -50px;
+}
+
+.grid-container .negativeDiv {
+    background-color: #ffe1e1;
+
+}
+
+.grid-container .positiveDiv {
+    background-color: #e2f9df;
+}
+
+.positive {
+    color: green;
+}
+
+.negative {
+    color: red;
 }

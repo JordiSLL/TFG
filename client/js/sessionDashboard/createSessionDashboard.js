@@ -120,6 +120,7 @@ function createGlobalChart(session) {
     var chartCanvas = document.getElementById("chartGlobal");
     console.log(session)
     emotions = getAvgEmotions(session.emotion.Prosody, session.emotion.Language, session.emotion.Face)
+    globalResult(emotions,session.emotion)
     createChart(emotions, chartCanvas);
     var chart = Chart.getChart(chartCanvas)
     chart.options.plugins.legend.position = 'bottom';

@@ -112,6 +112,7 @@ async function fetchVideoPrediction(videoPath) {
         listLanguage = combineEmotions(listFraseLanguage);
         listFace = combineEmotions(listFacetmp.map(emotions => ({ emotions })));
         listMedia = getAvgEmotions(listProsody,listLanguage,listFace);
+        globalResult()
         createGlobalChart();
         createTextDiv();
     } catch (error) {
