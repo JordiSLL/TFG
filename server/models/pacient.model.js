@@ -19,7 +19,6 @@ class MongoDBUser {
 
   async findAllWithSpecificValue(fieldName, specificValue, cb) {
     try {
-      // Perform the find operation with $in operator
       this.collection.find({ [fieldName]: { $in: [specificValue] } }).toArray((err, result) => {
         if (err) {
           console.error('Error finding documents:', err);

@@ -201,9 +201,10 @@ function createSessionsDiv(sessions) {
 
 function navigateSession() {
     const sessionId = this.dataset.sessionId;
-    var { userId } = getUrlParams();
+    var userId = sessionStorage.getItem('selectedUserId'); 
     if (!userId) {
-        userId = sessionStorage.getItem('selectedUserId');
+        var { user } = getUrlParams();
+        userId = user;
     }
     fetch(`/Dashboard/${userId}/${sessionId}`, {
         method: 'GET',

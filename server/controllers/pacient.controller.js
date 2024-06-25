@@ -29,6 +29,7 @@ exports.create = async (req, res) => {
     }
 };
 
+
 exports.findPacientById = async (req, res) => {
     try {
         const pacient = req.body;

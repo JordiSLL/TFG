@@ -19,5 +19,5 @@ services:
       - ./client:/app/client
     depends_on:
       - mongodb
-    #command: [ "npm", "run", "start" ]
-    command: [ "npm", "run", "start-dev" ]
+    command: [ "npm", "run", "start" ]
+    #command: [ "npm", "run", "start-dev" ]
